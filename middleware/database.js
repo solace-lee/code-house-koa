@@ -15,12 +15,14 @@ export const database = app => {
   }
 
   mongoose.connect(db, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
   })
 
   mongoose.connection.on('disconnected', () => {
       mongoose.connect(db, {
-        useNewUrlParser: true
+        useNewUrlParser: true,
+        useUnifiedTopology: true
       })
   })
 
