@@ -1,5 +1,5 @@
 export default {
-    db: 'mongodb://localhost/douban-trailer',
+    db: 'mongodb://cleanown.cn:27017',
     port: 3000,
     base: 'http://localhost:3000',
     qiniu: {

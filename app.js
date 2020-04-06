@@ -4,7 +4,7 @@ import R from 'ramda'
 import config from './config'
 import onerror from 'koa-onerror'
 
-const MIDDLEWARES = ['general', 'router']
+const MIDDLEWARES = ['database', 'general', 'router']
 
 const useMiddlewares = app => {
   R.map(

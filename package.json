@@ -19,6 +19,7 @@
     "koa-static": "^3.0.0",
     "koa-views": "^6.0.2",
     "koa2-cors": "^2.0.6",
+    "mongoose": "^5.9.7",
     "nunjucks": "~3.0.0",
     "ramda": "^0.27.0"
   },
