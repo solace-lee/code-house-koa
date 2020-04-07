@@ -1,5 +1,5 @@
 export default {
-    db: 'mongodb://cleanown.cn:27017',
+    db: 'mongodb://cleanown.cn:27017/code-house',
     port: 3000,
     base: 'http://localhost:3000',
     qiniu: {
