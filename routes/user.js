@@ -1,6 +1,7 @@
 import {
     Controller,
     Post,
+    Required,
     Get,
     Log
 } from '../decorator/router'
@@ -10,6 +11,9 @@ import { checkPassword, addNewUser } from '../services/user'
 @Controller('/user')
 export default class UserRouter {
     @Post('/login')
+    @Required({
+      body: ['username', 'password']
+    })
     async userLogin (ctx, next) {
       const { username, password } = ctx.request.body
       const data = await checkPassword(username, password)
@@ -34,6 +38,9 @@ export default class UserRouter {
     }
 
     @Post('/sign')
+    @Required({
+      body: ['username', 'password']
+    })
     async userSign (ctx, next) {
       const { username, password, role } = ctx.request.body
       const x = await addNewUser(username, password, role)

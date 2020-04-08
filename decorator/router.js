@@ -73,5 +73,29 @@ export const Log = convert(async (ctx, next) => {
   console.timeEnd(`${logTimes}: ${ctx.method} - ${ctx.url}`)
 })
 
+export const Required = paramsObj => convert(async (ctx, next) => {
+  let errs = []
+
+  R.forEachObjIndexed(
+    (val, key) => {
+      errs = errs.concat(
+        R.filter(
+          name => (!R.has(name, ctx.request[key]) || R.isEmpty(ctx.request[key][name]))
+        )(val)
+      )
+    }
+  )(paramsObj)
+
+  if (!R.isEmpty(errs)) {
+    return (
+      ctx.body = {
+        success: false,
+        data: `${R.join(', ', errs)} is required`
+      }
+    )
+  }
+  await next()
+})
+
 
 
