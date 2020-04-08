@@ -11,34 +11,32 @@ import { checkPassword, addNewUser } from '../services/user'
 export default class UserRouter {
     @Post('/login')
     async userLogin (ctx, next) {
-        const { username, password } = ctx.request.body
-        const data = await checkPassword(username, password)
-        const { user, match } = data
+      const { username, password } = ctx.request.body
+      const data = await checkPassword(username, password)
+      const { user, match } = data
 
-        if (match) {
-            return (ctx.body = {
-              success: true,
-              data: {
-                _id: user._id,
-                role: user.role,
-                headImg: user.headimg,
-                username: user.username
-              }
-            })
-          }
-      
+      if (match) {
           return (ctx.body = {
-            success: false,
-            data: '账号或密码错误'
+            success: true,
+            data: {
+              _id: user._id,
+              role: user.role,
+              headImg: user.headimg,
+              username: user.username
+            }
           })
+        }
+    
+        return (ctx.body = {
+          success: false,
+          data: '账号或密码错误'
+        })
     }
 
     @Post('/sign')
     async userSign (ctx, next) {
       const { username, password, role } = ctx.request.body
       const x = await addNewUser(username, password, role)
-      console.log(x);
-      
-       ctx.body = x
+      ctx.body = x
     }
 }
