@@ -21,7 +21,7 @@ export const addNewUser = async (username, password, role) => {
     if (user) {
         return {
             success: false,
-            err: '该用户已存在'
+            data: '该用户已存在'
         }
     }
     const news = new User({
@@ -30,16 +30,16 @@ export const addNewUser = async (username, password, role) => {
         role
     })
 
-    await news.save((err, dacs) => {
-        if (err) {
-            return {
+    return await new Promise((resolve, reject) => {
+        news.save(err => {
+            if (err) resolve({
                 success: false,
-                err: err
-            }
-        }
-        return {
-            success: true,
-            data: '用户添加成功'
-        }
+                data: err
+            })
+            resolve ({
+                success: true,
+                data: '用户添加成功'
+            })
+        })
     })
 }
