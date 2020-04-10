@@ -97,5 +97,47 @@ export const Required = paramsObj => convert(async (ctx, next) => {
   await next()
 })
 
+export const CheckEmpty = paramsObj => convert(async (ctx, next) => {
+  let errs = []
+
+  R.forEachObjIndexed(
+    (val, key) => {
+      errs = errs.concat(
+        R.filter(
+          name => R.isEmpty(ctx.request[key][name])
+        )(val)
+      )
+    }
+  )(paramsObj)
+
+  if (!R.isEmpty(errs)) {
+    return (
+      ctx.body = {
+        success: false,
+        data: `${R.join(', ', errs)} is empty`
+      }
+    )
+  }
+  await next()
+})
+
+export const Auth = paramsObj => convert(async (ctx, next) => {
+  if (!ctx.request.header.Authorization) {
+    return (
+      ctx.body = {
+        success: false,
+        errCode: 401,
+        errMsg: '登陆信息已失效, 请重新登陆'
+      }
+    )
+  } else if (paramsObj) {
+    // 如果token存在就去查找权限是否正确
+  }
+  await next()
+})
+
+
+
+
 
 

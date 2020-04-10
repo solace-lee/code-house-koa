@@ -15,6 +15,8 @@ export default class UserRouter {
       body: ['username', 'password']
     })
     async userLogin (ctx, next) {
+      console.log(ctx.request.header.Authorization);
+      
       const { username, password } = ctx.request.body
       const data = await checkPassword(username, password)
       const { user, match } = data

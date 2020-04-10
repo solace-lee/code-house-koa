@@ -12,7 +12,7 @@ import { checkEvery } from '../services/company'
 export default class CompanyRouter{
     @Post('/add')
     @Required({
-        body: ['companyname', 'province', 'city', 'companydetail']
+        body: ['companyname', 'province', 'city', 'companydetail', 'userid']
     })
     @Log
     async addCompany (ctx, next) {

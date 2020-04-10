@@ -11,6 +11,7 @@ const CompanySchema = new Schema({
         unique: true
     },
     address: String,
+    userid: String,
     province: {
         type: String,
         required: true
@@ -50,7 +51,6 @@ CompanySchema.pre('save', function (next) {
     } else {
         this.meta.updateAt = Date.now()
     }
-
     next()
 })
 
