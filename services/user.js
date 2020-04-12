@@ -21,7 +21,8 @@ export const addNewUser = async (username, password, role) => {
     if (user) {
         return {
             success: false,
-            data: '该用户已存在'
+            resMsg: '该用户已存在',
+            data: ''
         }
     }
     const news = new User({
@@ -38,8 +39,15 @@ export const addNewUser = async (username, password, role) => {
             })
             resolve ({
                 success: true,
-                data: '用户添加成功'
+                resMsg: '用户添加成功',
+                data: ''
             })
         })
     })
+}
+
+export const checkAuth = async (id) => {
+    const user = await User.findOne({_id: id},{password: 0}).exec()
+    if (user) return user
+    return false
 }

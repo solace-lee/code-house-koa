@@ -2,6 +2,7 @@ import { resolve } from 'path'
 import KoaRouter from 'koa-router'
 import glob from 'glob'
 import R from 'ramda'
+import { checkAuth } from '../services/user'
 
 const pathPrefix = Symbol('pathPrefix')
 const routeMap = []
@@ -122,7 +123,7 @@ export const CheckEmpty = paramsObj => convert(async (ctx, next) => {
 })
 
 export const Auth = paramsObj => convert(async (ctx, next) => {
-  if (!ctx.request.header.Authorization) {
+  if (!ctx.request.header.authorization) {
     return (
       ctx.body = {
         success: false,
@@ -132,6 +133,18 @@ export const Auth = paramsObj => convert(async (ctx, next) => {
     )
   } else if (paramsObj) {
     // 如果token存在就去查找权限是否正确
+    const x = await checkAuth(ctx.request.header.authorization)
+    if (!x || (x.role < paramsObj)) {
+      return (
+        ctx.body = {
+          success: false,
+          errCode: 500,
+          errMsg: '权限不足'
+        }
+      )
+    } else {
+      ctx.request.body.userinfo = x
+    }
   }
   await next()
 })

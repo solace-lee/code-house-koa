@@ -2,8 +2,6 @@ import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema
 
-// 记得加上用户Id
-
 const CompanySchema = new Schema({
     companyname: {
         type: String,
@@ -24,7 +22,7 @@ const CompanySchema = new Schema({
         type: String,
         required: true
     },
-    imags: Array,
+    imgs: Array,
     isverify: {
         type: Boolean,
         default: false

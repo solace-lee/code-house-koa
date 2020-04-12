@@ -3,7 +3,8 @@ import {
     Post,
     Required,
     Get,
-    Log
+    Log,
+    Auth
 } from '../decorator/router'
 
 import { checkPassword, addNewUser } from '../services/user'
@@ -15,8 +16,6 @@ export default class UserRouter {
       body: ['username', 'password']
     })
     async userLogin (ctx, next) {
-      console.log(ctx.request.header.Authorization);
-      
       const { username, password } = ctx.request.body
       const data = await checkPassword(username, password)
       const { user, match } = data
@@ -24,8 +23,9 @@ export default class UserRouter {
       if (match) {
           return (ctx.body = {
             success: true,
+            resMsg: '',
             data: {
-              _id: user._id,
+              id: user._id,
               role: user.role,
               headImg: user.headimg,
               username: user.username
@@ -35,7 +35,8 @@ export default class UserRouter {
     
         return (ctx.body = {
           success: false,
-          data: '账号或密码错误'
+          resMsg: '账号或密码错误',
+          data: ''
         })
     }
 
@@ -44,8 +45,18 @@ export default class UserRouter {
       body: ['username', 'password']
     })
     async userSign (ctx, next) {
-      const { username, password, role } = ctx.request.body
-      const x = await addNewUser(username, password, role)
+      const { username, password } = ctx.request.body
+      const x = await addNewUser(username, password)
       ctx.body = x
+    }
+
+    @Get('/userinfo')
+    @Auth(1)
+    async userInfo (ctx, next) {
+      ctx.body = {
+          success: true,
+          resMsg: '查询成功',
+          data: ctx.request.body.userinfo
+      }
     }
 }

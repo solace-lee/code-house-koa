@@ -8,8 +8,8 @@ const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
     role: {
-        type: String,
-        default: 'user'
+        type: Number,
+        default: 1 // 1是普通用户
     },
     username: {
         type: String,

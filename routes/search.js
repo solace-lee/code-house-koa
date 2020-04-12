@@ -1,55 +1,34 @@
 import {
     Controller,
+    Required,
     Post,
+    Auth,
     Get,
     Log
 } from '../decorator/router'
 
+import { findCompany, adminFindCompany } from '../services/searchService'
+
 @Controller('/search')
 export default class SearchPage {
   @Get('/companylist')
+  @Auth(1)
   @Log
   async searchFromKey (ctx, next) {
-    const x = ctx.query.key
-    let data = []
-    if (x) {
-      data = [
-        {
-          companyName: '聚韬信息科技有限公司',
-          city: '广州'
-        },
-        {
-          companyName: '安捷伦贸易有限公司',
-          city: '广州'
-        },
-        {
-          companyName: '联想阳光雨露有限公司',
-          city: '上海'
-        },
-        {
-          companyName: '达能食品饮料有限公司',
-          city: '广州'
-        },
-        {
-          companyName: '广东银保监局',
-          city: '广州'
-        },
-        {
-          companyName: '旭伟科技有限公司',
-          city: '东莞'
-        }
-      ]
-    } else {
-      ctx.res.writeHead(500)
-      data = []
-    }
+    const x = await findCompany(ctx.query.key)
     ctx.type = 'text/json; charset=utf-8'
-    ctx.body = {
-      status: 0,
-      resMsg: '成功',
-      data
-    }
-    next()
+    ctx.body = x
+    await next()
   }
 
+  @Post('/adminCompanyList')
+  @Auth(2)
+  @Required({
+    // body: ['isverify', 'isdelete', 'hotkey', 'beginTime', 'endTime']
+    body: ['page']
+  })
+  async adminList (ctx, next) {
+    const x = await adminFindCompany(ctx.request.body)
+    ctx.body = x
+  }
 }
