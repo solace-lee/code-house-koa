@@ -114,8 +114,9 @@ export const CheckEmpty = paramsObj => convert(async (ctx, next) => {
 })
 
 export const Auth = paramsObj => convert(async (ctx, next) => {
-  if (!ctx.request.header.authorization) {
-    return (ctx.body = returnBody(401, '', '登陆信息已失效, 请重新登陆'))
+  if (!(ctx.request.header.authorization && ctx.request.header.authorization.length === 24)) {
+    return ctx.res.writeHead(401)
+    // return (ctx.body = returnBody(401, '', '登陆信息已失效, 请重新登陆'))
   } else if (paramsObj) {
     // 如果token存在就去查找权限是否正确
     const x = await checkAuth(ctx.request.header.authorization)

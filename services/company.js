@@ -43,8 +43,40 @@ export const companyVerify = body => {
                 isverify: status
             },
             err => {
-                if (err) resolve(returnBody(400, err))
-                resolve (returnBody(200, '', '修改成功'))
+                if (err) {
+                    resolve(returnBody(400, err))
+                } else {
+                    resolve (returnBody(200, '', '修改成功'))
+                }
         })
     })
+}
+
+export const companyDelete = id => {
+    return new Promise((resolve) => {
+        Company.remove({_id: id}, err => {
+            if (err) {
+                resolve(returnBody(400, err))
+            } else {
+                resolve (returnBody(200, '', '删除成功'))
+            }
+        })
+    })
+}
+
+export const getDetail = async id => {
+    const company = await Company.findOne(
+        {
+            _id: id
+        },
+        {
+            isdelete: 0
+        }
+    ).exec()
+
+    if (company) {
+        return returnBody(200, company, '')
+    } else {
+        return returnBody(400, '', '该用户已存在')
+    }
 }

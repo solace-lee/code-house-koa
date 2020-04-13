@@ -4,11 +4,18 @@ import {
     Post,
     Auth,
     Put,
+    Delete,
     Get,
     Log
 } from '../decorator/router'
 
-import { checkEvery, saveCompany, companyVerify } from '../services/company'
+import {
+    checkEvery,
+    saveCompany,
+    companyVerify,
+    companyDelete,
+    getDetail
+} from '../services/company'
 import { returnBody } from '../services/common'
 
 
@@ -40,13 +47,21 @@ export default class CompanyRouter{ // 添加公司
         await next()
     }
 
-    @Put('/admindelete')
+    @Delete('/admindelete')
     @Auth(2)
-    @Required({
-        body: ["companyid"]
-    })
     async realDelet (ctx, next) {
+        if (ctx.query.companyid && (ctx.query.companyid.length === 24)) {
+            return ctx.body = await companyDelete(ctx.query.companyid)
+        } else return ctx.body = returnBody(400, '', '公司ID错误')
+    }
 
+    @Get('/companyDetail')
+    @Auth(1)
+    async getCompanyDetail (ctx, next) {
+        if (ctx.query.companyid && (ctx.query.companyid.length === 24)) {
+            return ctx.body = await getDetail(ctx.query.companyid)
+        } else return ctx.body = returnBody(400, '', '公司ID错误')
+        await next()
     }
 
 }
