@@ -9,6 +9,8 @@ import {
 } from '../decorator/router'
 
 import { checkEvery, saveCompany, companyVerify } from '../services/company'
+import { returnBody } from '../services/common'
+
 
 @Controller('/company')
 export default class CompanyRouter{ // 添加公司
@@ -23,11 +25,7 @@ export default class CompanyRouter{ // 添加公司
             // 校验各个参数是否符合规范
             ctx.body = await saveCompany(ctx.request.body, ctx.request.header.authorization)
         } else {
-            ctx.body = {
-                success: false,
-                errCode: 500,
-                errMsg: '输入的内容长度不符合要求'
-            }
+            ctx.body = returnBody(400, '', '输入的内容长度不符合要求')
         }
         await next()
     }

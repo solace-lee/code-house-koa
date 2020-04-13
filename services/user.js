@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { returnBody } from './common'
 
 const User = mongoose.model('User')
 
@@ -19,11 +20,7 @@ export const checkPassword = async (username, password) => {
 export const addNewUser = async (username, password, role) => {
     const user = await User.findOne({username}).exec()
     if (user) {
-        return {
-            success: false,
-            resMsg: '该用户已存在',
-            data: ''
-        }
+        return returnBody(400, '', '该用户已存在')
     }
     const news = new User({
         username,
@@ -33,15 +30,8 @@ export const addNewUser = async (username, password, role) => {
 
     return await new Promise((resolve, reject) => {
         news.save(err => {
-            if (err) resolve({
-                success: false,
-                data: err
-            })
-            resolve ({
-                success: true,
-                resMsg: '用户添加成功',
-                data: ''
-            })
+            if (err) resolve(returnBody(400, err))
+            resolve (returnBody(200, '', '用户添加成功'))
         })
     })
 }

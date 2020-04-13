@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { returnBody } from './common'
 
 const Company = mongoose.model('Company')
 
@@ -25,16 +26,8 @@ export const saveCompany = async (body, userid) => {
 
     return await new Promise((resolve, reject) => {
         news.save(err => {
-            if (err) resolve({
-                success: false,
-                resMsg: err,
-                data: ''
-            })
-            resolve ({
-                success: true,
-                resMsg: '添加成功',
-                data: ''
-            })
+            if (err) resolve(returnBody(400, err))
+            resolve (returnBody(200, '', '添加成功'))
         })
     })
 }
@@ -50,16 +43,8 @@ export const companyVerify = body => {
                 isverify: status
             },
             err => {
-                if (err) resolve({
-                    success: false,
-                    resMsg: err,
-                    data: ''
-                })
-                resolve ({
-                    success: true,
-                    resMsg: '修改成功',
-                    data: ''
-                })
+                if (err) resolve(returnBody(400, err))
+                resolve (returnBody(200, '', '修改成功'))
         })
     })
 }

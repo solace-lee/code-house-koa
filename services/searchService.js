@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { returnBody } from './common'
 
 const Company = mongoose.model('Company')
 
@@ -25,11 +26,7 @@ export const findCompany = async (key) => {
     .limit(40)
     .sort({'meta.createAt': -1})
     .exec()
-    return {
-        success: true,
-        resMsg: '查询成功',
-        data: companyList
-    }
+    return returnBody(200, companyList, '查询成功')
 }
 
 export const adminFindCompany = async (body) => {
@@ -80,13 +77,9 @@ export const adminFindCompany = async (body) => {
     .skip((page - 1) * 10)
     .sort({'meta.updateAt': -1})
     .exec()
-    return {
-        success: true,
-        resMsg: '查询成功',
-        data: {
-            pageTotle: Math.ceil(allConut / 10),
-            page,
-            adminlist
-        }
-    }
+    return returnBody(200, {
+        pageTotle: Math.ceil(allConut / 10),
+        page,
+        adminlist
+    }, '查询成功')
 }

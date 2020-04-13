@@ -8,6 +8,7 @@ import {
 } from '../decorator/router'
 
 import { checkPassword, addNewUser } from '../services/user'
+import { returnBody } from '../services/common'
 
 @Controller('/user')
 export default class UserRouter {
@@ -20,24 +21,8 @@ export default class UserRouter {
       const data = await checkPassword(username, password)
       const { user, match } = data
 
-      if (match) {
-          return (ctx.body = {
-            success: true,
-            resMsg: '',
-            data: {
-              id: user._id,
-              role: user.role,
-              headImg: user.headimg,
-              username: user.username
-            }
-          })
-        }
-    
-        return (ctx.body = {
-          success: false,
-          resMsg: '账号或密码错误',
-          data: ''
-        })
+      if (match) (ctx.body = returnBody(200, {id: user._id}, '账号或密码错误'))
+      ctx.body = returnBody(400, '', '账号或密码错误')
     }
 
     @Post('/sign')
@@ -53,10 +38,6 @@ export default class UserRouter {
     @Get('/userinfo')
     @Auth(1)
     async userInfo (ctx, next) {
-      ctx.body = {
-          success: true,
-          resMsg: '查询成功',
-          data: ctx.request.body.userinfo
-      }
+      ctx.body = returnBody(200, ctx.request.body.userinfo, '查询成功')
     }
 }
