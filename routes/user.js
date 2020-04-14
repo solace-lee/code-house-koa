@@ -20,7 +20,6 @@ export default class UserRouter {
       const { username, password } = ctx.request.body
       const data = await checkPassword(username, password)
       const { user, match } = data
-
       if (match) return(ctx.body = returnBody(200, {id: user._id}, '登陆成功'))
       return ctx.body = returnBody(400, '', '账号或密码错误')
     }
