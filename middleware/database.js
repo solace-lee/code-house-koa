@@ -15,12 +15,18 @@ export const database = app => {
   }
 
   mongoose.connect(db, {
+    // user: 'solace',
+    // pass: 'solace6637296',
+    // dbName: 'code-house',
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
 
   mongoose.connection.on('disconnected', () => {
       mongoose.connect(db, {
+        // user: 'solace',
+        // pass: 'solace6637296',
+        // dbName: 'code-house',
         useNewUrlParser: true,
         useUnifiedTopology: true
       })
