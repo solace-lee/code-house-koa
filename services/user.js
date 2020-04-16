@@ -41,3 +41,68 @@ export const checkAuth = async (id) => {
     if (user) return user
     return false
 }
+
+export const getAllUsers = async (hotkey, page) => {
+    page = page ? page : 1
+    const allConut = await User.count({
+        $or: [
+            {
+                username: {$regex: hotkey || ''},
+            },
+        ]
+    }).exec()
+
+    const users = await User.find(
+        {
+            $or: [
+                {
+                    username: {$regex: hotkey || ''},
+                }
+            ],
+        },
+        {
+            password: 0,
+            hashed_password: 0
+        }
+    )
+    .limit(10)
+    .skip((page - 1) * 10)
+    .sort({'meta.updateAt': -1})
+    .exec()
+
+    return returnBody(200, {
+        pageTotle: Math.ceil(allConut / 10),
+        page,
+        users
+    }, '查询成功')
+}
+
+export const changeRole = async (id, newRole) => {
+    return new Promise((resolve) => {
+        User.update(
+            { _id: id },
+            {
+                role: newRole
+            },
+            err => {
+                if (err) {
+                    resolve(returnBody(400, err))
+                } else {
+                    resolve (returnBody(200, '', '修改成功'))
+                }
+            }
+        )
+    })
+}
+
+export const delUser = async id => {
+    return new Promise((resolve) => {
+        User.remove({_id: id}, err => {
+            if (err) {
+                resolve(returnBody(400, err))
+            } else {
+                resolve (returnBody(200, '', '删除用户成功'))
+            }
+        })
+    })
+}
