@@ -1,5 +1,5 @@
 import cors from 'koa2-cors'
-import bodyParser from 'koa-bodyparser'
+import koaBody from 'koa-body'
 import logger from 'koa-logger'
 import json from 'koa-json'
 import koaStatic from 'koa-static'
@@ -13,8 +13,13 @@ export const addCors = app => {
   app.use(cors())
 }
 
-export const addBodyParser = app => {
-  app.use(bodyParser())
+export const addKoaBody = app => {
+  app.use(koaBody({
+    multipart: true,
+    formidable: {
+      maxFieldsSize: 2000*1024*1024
+    }
+  }))
 }
 
 export const addLogger = app => {

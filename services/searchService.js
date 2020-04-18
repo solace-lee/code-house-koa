@@ -47,7 +47,7 @@ export const adminFindCompany = async (body) => {
         ],
         'meta.updateAt': {
             $gt: beginTime || 1,
-            $lt: endTime || new Date().getTime()
+            $lt: endTime || Date.now()
         }
     }).exec()
 
@@ -64,7 +64,7 @@ export const adminFindCompany = async (body) => {
             ],
             'meta.updateAt': {
                 $gt: beginTime || 1,
-                $lt: endTime || new Date().getTime()
+                $lt: endTime || Date.now()
             }
         },
         {
