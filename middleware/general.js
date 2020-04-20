@@ -5,12 +5,12 @@ import json from 'koa-json'
 import koaStatic from 'koa-static'
 import { join } from 'path'
 
-export const addStatic = app => {
-  app.use(koaStatic(join(__dirname, '../public')))
-}
-
 export const addCors = app => {
   app.use(cors())
+}
+
+export const addStatic = app => {
+  app.use(koaStatic(join(__dirname, '../public')))
 }
 
 export const addKoaBody = app => {
