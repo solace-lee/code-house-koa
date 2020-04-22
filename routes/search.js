@@ -24,7 +24,6 @@ export default class SearchPage {
   @Post('/adminCompanyList')
   @Auth(2)
   @Required({
-    // body: ['isverify', 'isdelete', 'hotkey', 'beginTime', 'endTime']
     body: ['page']
   })
   async adminList (ctx, next) {

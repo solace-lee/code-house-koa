@@ -13,7 +13,7 @@ import {
 @Controller('/upload')
 export default class SearchPage {
   @Post('/img')
-  // @Auth(1)
+  @Auth(1)
   @Required({
     files: ['file']
   })
