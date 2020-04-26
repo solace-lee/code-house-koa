@@ -21,14 +21,6 @@ const CommentSchema = new Schema({
         type: String,
         required: true
     }, // 评论人
-    username: {
-        type: String,
-        required: true
-    }, // 用户名
-    isdelete: {
-        type: Boolean,
-        default: false
-    },
     linkid: String, // @的人的ID
     linkname: String, // @的人的用户名
     meta: {
@@ -43,7 +35,7 @@ const CommentSchema = new Schema({
     }
 })
 
-CompanySchema.pre('save', function (next) {
+CommentSchema.pre('save', function (next) {
     if (this.isNew) {
         this.meta.createAt = this.meta.updateAt = Date.now()
     } else {
