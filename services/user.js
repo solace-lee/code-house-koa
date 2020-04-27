@@ -37,6 +37,7 @@ export const addNewUser = async (username, password, role) => {
 }
 
 export const checkAuth = async (id) => {
+    // 获取用户
     const user = await User.findOne({_id: id},{password: 0}).exec()
     if (user) return user
     return false
@@ -105,4 +106,15 @@ export const delUser = async id => {
             }
         })
     })
+}
+
+export const getUserInfo = async (id) => {
+    // 获取用户信息
+    const user = await User.findOne({_id: id},{
+        role: 1,
+        username: 1,
+        headimg: 1
+    }).exec()
+    if (user) return user
+    return {}
 }

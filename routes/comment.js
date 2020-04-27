@@ -35,7 +35,7 @@ export default class CommentRouter{ // 添加公司
 
     @Get('get/:id')
     @Auth(1)
-    async getComment (ctx, next) { // 根据发文ID获取评论
+    async findComment (ctx, next) { // 根据发文ID获取评论
         console.log(ctx.params.id);
         
     }
