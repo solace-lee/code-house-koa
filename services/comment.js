@@ -46,7 +46,7 @@ export const getComment = async (companyid) => {
     // 处理假删的数据，并关联评论用户的信息,并区分是否是子评论
     let newMain = []
     let newSecond = []
-    R.forEach(item => {
+    R.forEach(async item => {
         item.userInfo = await getUserInfo(item.userid)
         if (item.isdelete) {
             item.commentdetail = '该评论已被删除'
