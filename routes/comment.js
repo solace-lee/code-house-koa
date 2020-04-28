@@ -12,6 +12,7 @@ import {
 import {
     checkEvery,
     saveComment,
+    getComment
 } from '../services/comment'
 import { returnBody } from '../services/common'
 
@@ -37,6 +38,11 @@ export default class CommentRouter{ // 添加公司
     @Auth(1)
     async findComment (ctx, next) { // 根据发文ID获取评论
         console.log(ctx.params.id);
+        if (ctx.params.id) {
+            ctx.body = await getComment(ctx.params.id)
+        } else {
+            ctx.body = returnBody(400, '', '请输入发文ID')
+        }
         
     }
     
