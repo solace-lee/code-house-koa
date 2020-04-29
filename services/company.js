@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { returnBody } from './common'
+import { getUserInfo } from './user'
 
 const Company = mongoose.model('Company')
 
@@ -75,8 +76,10 @@ export const getDetail = async id => {
     ).exec()
 
     if (company) {
-        return returnBody(200, company, '')
+        let x = {...company._doc}
+        x.userinfo = await getUserInfo(item.userid)
+        return returnBody(200, x, '')
     } else {
-        return returnBody(400, '', '该用户已存在')
+        return returnBody(400, '', '获取失败')
     }
 }
