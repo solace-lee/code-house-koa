@@ -40,24 +40,26 @@ export const getComment = async (companyid) => {
     .exec()
 
     if (R.isEmpty(all)) {
-        return returnBody(200, '', '查询成功')
+        return returnBody(200, '', '没有评论')
     }
 
     // 处理假删的数据，并关联评论用户的信息,并区分是否是子评论
     let newMain = []
     let newSecond = []
-    R.forEach(item => {
-        item.userInfo = await getUserInfo(item.userid)
+    for (let i = 0; i < all.length; i++) {
+        let item = {...all[i]._doc}
+        item.userinfo = await getUserInfo(item.userid)
         if (item.isdelete) {
             item.commentdetail = '该评论已被删除'
             item.imgs = []
         }
-        if (item.commentid) {
+
+        if (!R.isEmpty(item.commentid)) {
             newSecond.push(item)
         } else {
             newMain.push(item)
         }
-    }, all)
+    }
 
     // 塞数据进去主评论
     R.map(val => {

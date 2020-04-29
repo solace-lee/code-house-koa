@@ -18,7 +18,7 @@ import { returnBody } from '../services/common'
 
 
 @Controller('/comment')
-export default class CommentRouter{ // 添加公司
+export default class CommentRouter{ // 添加评论
     @Post('/add')
     @Auth(1)
     @Required({
