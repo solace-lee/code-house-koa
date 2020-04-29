@@ -77,7 +77,7 @@ export const getDetail = async id => {
 
     if (company) {
         let x = {...company._doc}
-        x.userinfo = await getUserInfo(item.userid)
+        x.userinfo = await getUserInfo(x.userid)
         return returnBody(200, x, '')
     } else {
         return returnBody(400, '', '获取失败')
