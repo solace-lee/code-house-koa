@@ -68,7 +68,7 @@ export const getComment = async (companyid) => {
         val.children = []
         R.forEach(ele => {
             console.log(val._id, ele.commentid);
-            if (R.equals(val._id, ele.commentid)) {
+            if (R.equals((val._id).toString(), (ele.commentid).toString())) {
                 val.children.push(ele)
             }
         }, newSecond)
