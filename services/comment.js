@@ -61,14 +61,11 @@ export const getComment = async (companyid) => {
         }
     }
 
-    // console.log(newMain, 'newMain', newSecond, 'newSecond');
-    
     // 塞数据进去主评论
     newMain = R.map(val => {
         val.children = []
         R.forEach(ele => {
-            console.log(val._id, ele.commentid);
-            if (R.equals((val._id).toString(), (ele.commentid).toString())) {
+            if (R.equals((val._id).toString(), ele.commentid)) {
                 val.children.push(ele)
             }
         }, newSecond)
