@@ -61,6 +61,8 @@ export const getComment = async (companyid) => {
         }
     }
 
+    console.log(newMain, 'newMain', newSecond, 'newSecond');
+    
     // 塞数据进去主评论
     newMain = R.map(val => {
         val.children = []
