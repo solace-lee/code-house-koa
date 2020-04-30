@@ -67,9 +67,8 @@ export const getComment = async (companyid) => {
     newMain = R.map(val => {
         val.children = []
         R.forEach(ele => {
+            console.log(val._id, ele.commentid);
             if (R.equals(val._id, ele.commentid)) {
-                console.log(val._id, ele.commentid);
-                
                 val.children.push(ele)
             }
         }, newSecond)
