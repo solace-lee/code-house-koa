@@ -73,5 +73,4 @@ export const getComment = async (companyid) => {
     }, newMain)
 
     return returnBody(200, newMain, '查询成功')
-
 }
