@@ -56,7 +56,7 @@ export default class CompanyRouter{ // 添加公司
     }
 
     @Get('/companyDetail')
-    @Auth(1)
+    // @Auth(1)
     async getCompanyDetail (ctx, next) {
         if (ctx.query.companyid && (ctx.query.companyid.length === 24)) {
             return ctx.body = await getDetail(ctx.query.companyid)

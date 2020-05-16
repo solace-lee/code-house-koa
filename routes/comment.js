@@ -37,7 +37,7 @@ export default class CommentRouter{ // 添加评论
     @Get('get/:id')
     @Auth(1)
     async findComment (ctx, next) { // 根据发文ID获取评论
-        console.log(ctx.params.id);
+        // console.log(ctx.params.id);
         if (ctx.params.id) {
             ctx.body = await getComment(ctx.params.id)
         } else {

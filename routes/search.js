@@ -12,7 +12,7 @@ import { findCompany, adminFindCompany } from '../services/searchService'
 @Controller('/search')
 export default class SearchPage {
   @Get('/companylist')
-  @Auth(1)
+  // @Auth(1)
   @Log
   async searchFromKey (ctx, next) {
     const x = await findCompany(ctx.query.key)
