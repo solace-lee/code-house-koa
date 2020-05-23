@@ -25,7 +25,7 @@ export const uploadList = async list => {
 }
 
 export const getStudent = async (keyword) => {
-    const studentList = await Student.find({studentname:keyword}).exec()
+    const studentList = await Student.find({studentname:keyword}).sort({'meta.updateAt': -1}).exec()
 
     if (studentList) {
         return (returnBody(200, studentList, '获取成功'))
