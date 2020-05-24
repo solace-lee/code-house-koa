@@ -35,7 +35,7 @@ export default class UserRouter {
 
     @Get('/getAll')
     async findMark (ctx, next) {
-      const x = await getMark(ctx.query.hotkey)
+      const x = await getMark(ctx.query.hotkey, ctx.query.page)
       return ctx.body = x
     }
 

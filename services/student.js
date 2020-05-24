@@ -14,8 +14,7 @@ export const uploadList = async list => {
     }
     return await new Promise((resolve, reject) => {
         Student.insertMany(list)
-            .then((res) => {
-                console.log(res)
+            .then(() => {
                 resolve (returnBody(200, '', '上传成功'))
             })
             .catch(e => {
