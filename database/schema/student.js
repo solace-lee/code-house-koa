@@ -29,8 +29,8 @@ const StudentSchema = new Schema({
     },
     meta: {
         updateAt: {
-            type: Date,
-            default: '2020-05-20T05:20:00.024Z'
+            type: String,
+            default: '1590084000000'
         }
     }
 })
