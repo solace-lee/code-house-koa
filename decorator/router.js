@@ -6,7 +6,7 @@ import { checkAuth } from '../services/user'
 import { returnBody } from '../services/common'
 
 const pathPrefix = Symbol('pathPrefix')
-const routeMap = []
+let routeMap = []
 let logTimes = 0
 
 const resolvePath = R.unless(
