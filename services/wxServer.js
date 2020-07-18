@@ -6,13 +6,11 @@ const http = new Interceptors().getInterceptors()
 export const getUnionId = async (ctx) => {
   if (ctx.query && ctx.query.code) {
     // 拿到code
-    console.log(wechatConfig.appid, wechatConfig.appsecret);
     const { openid, unionid, session_key } = await _getWechatAccess(ctx.query.code, wechatConfig.appid, wechatConfig.appsecret)
     return {
       openid: openid || '',
       unionid: unionid || '',
-      session_key: session_key || '',
-      token: ''
+      session_key: session_key || ''
     }
   } else {
     ctx.res.writeHead(500)
