@@ -1,28 +1,23 @@
 import mongoose from 'mongoose'
-
 const Schema = mongoose.Schema
 
-const CommentSchema = new Schema({
-    commentdetail: {
+const ParentApplySchema = new Schema({
+    openid: { // 家长的openID
         type: String,
         required: true
     },
-    imgs: Array,
-    commentid: String, // 评论别人的评论，评论ID 评论别人的评论时才有
-    isdelete: {
+    studentname: {
+        type: String,
+        required: true,
+    },
+    studentid: {
+        type: String,
+        required: true,
+    },
+    is_del: {
         type: Boolean,
         default: false
     },
-    companyid: {
-        type: String,
-        required: true
-    }, // 评论的主体
-    userid: {
-        type: String,
-        required: true
-    }, // 评论人
-    linkid: String, // @的人的ID
-    linkname: String, // @的人的用户名
     meta: {
         createAt: {
             type: Date,
@@ -35,7 +30,8 @@ const CommentSchema = new Schema({
     }
 })
 
-CommentSchema.pre('save', function (next) {
+
+ParentApplySchema.pre('save', function (next) {
     if (this.isNew) {
         this.meta.createAt = this.meta.updateAt = Date.now()
     } else {
@@ -44,5 +40,4 @@ CommentSchema.pre('save', function (next) {
     next()
 })
 
-
-mongoose.model('Comment', CommentSchema)
+mongoose.model('ParentApply', ParentApplySchema)

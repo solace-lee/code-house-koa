@@ -1,33 +1,16 @@
 import mongoose from 'mongoose'
-
 const Schema = mongoose.Schema
 
-const CompanySchema = new Schema({
-    companyname: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    address: String,
-    userid: String,
-    province: {
+const TeacherInvitationSchema = new Schema({
+    openid: {
         type: String,
         required: true
     },
-    city: {
+    invite_code: {
         type: String,
         required: true
     },
-    companydetail: {
-        type: String,
-        required: true
-    },
-    imgs: Array,
-    isverify: {
-        type: Boolean,
-        default: false
-    },
-    isdelete: {
+    is_del: {
         type: Boolean,
         default: false
     },
@@ -43,7 +26,8 @@ const CompanySchema = new Schema({
     }
 })
 
-CompanySchema.pre('save', function (next) {
+
+TeacherInvitationSchema.pre('save', function (next) {
     if (this.isNew) {
         this.meta.createAt = this.meta.updateAt = Date.now()
     } else {
@@ -52,5 +36,4 @@ CompanySchema.pre('save', function (next) {
     next()
 })
 
-
-mongoose.model('Company', CompanySchema)
+mongoose.model('TeacherInvitation', TeacherInvitationSchema)

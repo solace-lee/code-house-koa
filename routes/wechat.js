@@ -6,9 +6,6 @@ import {
   Required,
 } from '../decorator/router'
 import { getUnionId } from '../services/wxServer'
-import { Interceptors } from '../config/http'
-
-const http = new Interceptors().getInterceptors()
 
 @Controller('/wechat')
 export default class Wechat {

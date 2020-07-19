@@ -1,11 +1,23 @@
 import mongoose from 'mongoose'
+
 const Schema = mongoose.Schema
 
-const ImageSchema = new Schema({
-    imagePath: {
-        required: true,
+const TeacherStudentSchema = new Schema({
+    openid: { // 教师OpenID
         type: String,
-        unique: true
+        required: true
+    },
+    studentname: {
+        type: String,
+        required: true,
+    },
+    studentid: {
+        type: Array,
+        default: []
+    },
+    is_del: {
+        type: Boolean,
+        default: false
     },
     meta: {
         createAt: {
@@ -19,8 +31,7 @@ const ImageSchema = new Schema({
     }
 })
 
-
-ImageSchema.pre('save', function (next) {
+TeacherStudentSchema.pre('save', function (next) {
     if (this.isNew) {
         this.meta.createAt = this.meta.updateAt = Date.now()
     } else {
@@ -29,4 +40,5 @@ ImageSchema.pre('save', function (next) {
     next()
 })
 
-mongoose.model('Image', ImageSchema)
+
+mongoose.model('TeacherStudent', TeacherStudentSchema)

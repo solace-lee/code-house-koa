@@ -19,6 +19,10 @@ const StudentSchema = new Schema({
         type: String,
         required: true
     },
+    openid: {
+        type: String,
+        required: true
+    },
     keywords: {
         type: Array,
         default: []
@@ -26,6 +30,10 @@ const StudentSchema = new Schema({
     detail: {
         type: Array,
         default: []
+    },
+    is_del: {
+        type: Boolean,
+        default: false
     },
     meta: {
         updateAt: {

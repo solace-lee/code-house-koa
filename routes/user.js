@@ -10,8 +10,7 @@ import {
 } from '../decorator/router'
 
 import {
-  checkPassword,
-  addNewUser,
+  findAndCreatUser,
   getAllUsers,
   changeRole,
   delUser
@@ -20,32 +19,12 @@ import { returnBody } from '../services/common'
 
 @Controller('/user')
 export default class UserRouter {
-    @Post('/login')
-    @Required({
-      body: ['username', 'password']
-    })
-    async userLogin (ctx, next) {
-      const { username, password } = ctx.request.body
-      const data = await checkPassword(username, password)
-      const { user, match } = data
-      if (match) return(ctx.body = returnBody(200, {id: user._id}, '登陆成功'))
-      return ctx.body = returnBody(400, '', '账号或密码错误')
-    }
-
-    @Post('/sign')
-    @Required({
-      body: ['username', 'password']
-    })
-    async userSign (ctx, next) {
-      const { username, password } = ctx.request.body
-      const x = await addNewUser(username, password)
-      ctx.body = x
-    }
-
-    @Get('/userinfo')
-    @Auth(1)
-    async userInfo (ctx, next) {
-      ctx.body = returnBody(200, ctx.request.body.userinfo, '查询成功')
+    @Get('/info')
+    async userLoginAndInfo (ctx, next) {
+      const openid = ctx.request.header.authorization
+      const user = await findAndCreatUser(openid)
+      if (user) return(ctx.body = returnBody(200, user, '登陆成功'))
+      return ctx.body = returnBody(500, '', '获取用户信息失败')
     }
 
     @Get('/getalluser')
