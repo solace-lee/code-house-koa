@@ -1,8 +1,8 @@
-import mongoose from 'mongoose'
+// import mongoose from 'mongoose'
 import { returnBody } from './common'
 import { getUserInfo } from './user'
 
-const Company = mongoose.model('Company')
+// const Company = mongoose.model('Company')
 
 export const checkEvery = async body => {
     let x = true

@@ -1,9 +1,9 @@
-import mongoose from 'mongoose'
+// import mongoose from 'mongoose'
 import { returnBody } from './common'
 import { getUserInfo } from './user'
 import R from 'ramda'
 
-const Comment = mongoose.model('Comment')
+// const Comment = mongoose.model('Comment')
 
 export const checkEvery = async body => {
     let x = true

@@ -3,8 +3,8 @@ import { join } from 'path'
 import R from 'ramda'
 import config from '../config'
 
-import mongoose from 'mongoose'
-const Image = mongoose.model('Image')
+// import mongoose from 'mongoose'
+// const Image = mongoose.model('Image')
 
 
 export const returnBody = (code, data, msg) => {
@@ -26,23 +26,23 @@ export const uploadImg = async file => {
     const upStream = fs.createWriteStream(filePath)
     // 可读流通过管道写入可写流
     reader.pipe(upStream)
-    const news = new Image({
-      imagePath: `${fileName}${fileType}`
-    })
-    return await new Promise((resolve, reject) => {
-        news.save(err => {
-            if (err) {
-              resolve(
-                returnBody(400, '', '上传失败')
-              )
-            } else {
-              resolve (returnBody(200, {
-                path: `${fileName}${fileType}`,
-                prefix: config.prefix
-              }, '上传成功'))
-            }
-        })
-    })
+    // const news = new Image({
+    //   imagePath: `${fileName}${fileType}`
+    // })
+    // return await new Promise((resolve, reject) => {
+    //     news.save(err => {
+    //         if (err) {
+    //           resolve(
+    //             returnBody(400, '', '上传失败')
+    //           )
+    //         } else {
+    //           resolve (returnBody(200, {
+    //             path: `${fileName}${fileType}`,
+    //             prefix: config.prefix
+    //           }, '上传成功'))
+    //         }
+    //     })
+    // })
   } else {
     return returnBody(400, '', '文件类型不正确')
   }

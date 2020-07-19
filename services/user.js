@@ -13,18 +13,8 @@ export const findAndCreatUser = async (openid) => {
         inviter: 0
     }).exec()
 
-    if (R.isEmpty(user)) {
-        if (await _addNewUser(openid)) {
-            user = await User.findOne({
-                openid
-            },
-            {
-                is_del: 0,
-                inviter: 0
-            }).exec()
-        } else {
-            return false
-        }
+    if (!user) {
+        user = await _addNewUser(openid)
     }
 
     return user
@@ -36,11 +26,11 @@ const _addNewUser = async openid => { // 添加用户和绑定表
     })
 
     return new Promise((resolve, reject) => {
-        newUser.save(err => {
+        newUser.save((err, doc) => {
             if (err) {
                 resolve(false)
             } else {
-                resolve(true)
+                resolve(doc)
             }
         })
     })

@@ -1,7 +1,7 @@
-import mongoose from 'mongoose'
+// import mongoose from 'mongoose'
 import { returnBody } from './common'
 
-const Company = mongoose.model('Company')
+// const Company = mongoose.model('Company')
 
 export const findCompany = async (key) => {
     const companyList = await Company.find(
