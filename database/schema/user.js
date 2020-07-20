@@ -45,8 +45,8 @@ const UserSchema = new Schema({
         default: ''
     },
     gender: {
-        type: String,
-        default: ''
+        type: Number,
+        default: 0
     },
     nick_name: {
         type: String,

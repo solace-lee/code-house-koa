@@ -11,9 +11,8 @@ import { findCompany, adminFindCompany } from '../services/searchService'
 
 @Controller('/search')
 export default class SearchPage {
-  @Get('/companylist')
-  // @Auth(1)
-  @Log
+  @Get('/student')
+  @Auth(1)
   async searchFromKey (ctx, next) {
     const x = await findCompany(ctx.query.key)
     ctx.type = 'text/json; charset=utf-8'

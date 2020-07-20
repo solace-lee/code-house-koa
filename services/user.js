@@ -36,46 +36,24 @@ const _addNewUser = async openid => { // 添加用户和绑定表
     })
 }
 
-export const checkAuth = async (id) => {
-    // 获取用户
-    const user = await User.findOne({_id: id},{password: 0}).exec()
-    if (user) return user
-    return false
-}
 
-export const getAllUsers = async (hotkey, page) => {
-    page = page ? page : 1
-    const allConut = await User.count({
-        $or: [
-            {
-                username: {$regex: hotkey || ''},
-            },
-        ]
+export const saveUserInfo = async (req) => {
+    const success = await User.updateOne({
+        openid: req.header.authorization
+    }, {
+        avatar_url: req.body.avatarUrl,
+        city: req.body.city,
+        country: req.body.country,
+        gender: req.body.gender,
+        nick_name: req.body.nickName,
+        province: req.body.province
     }).exec()
 
-    const users = await User.find(
-        {
-            $or: [
-                {
-                    username: {$regex: hotkey || ''},
-                }
-            ],
-        },
-        {
-            password: 0,
-            hashed_password: 0
-        }
-    )
-    .limit(10)
-    .skip((page - 1) * 10)
-    .sort({'meta.updateAt': -1})
-    .exec()
-
-    return returnBody(200, {
-        pageTotle: Math.ceil(allConut / 10),
-        page,
-        users
-    }, '查询成功')
+    if (success.ok) {
+        return returnBody(200, success, '更新成功')
+    } else {
+        return returnBody(500, success, '保存失败')
+    }
 }
 
 export const changeRole = async (id, newRole) => {

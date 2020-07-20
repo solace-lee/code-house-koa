@@ -11,7 +11,7 @@ import {
 
 import {
   findAndCreatUser,
-  getAllUsers,
+  saveUserInfo,
   changeRole,
   delUser
 } from '../services/user'
@@ -20,6 +20,7 @@ import { returnBody } from '../services/common'
 @Controller('/user')
 export default class UserRouter {
     @Get('/info')
+    @Auth(1)
     async userLoginAndInfo (ctx, next) {
       const openid = ctx.request.header.authorization
       const user = await findAndCreatUser(openid)
@@ -27,10 +28,13 @@ export default class UserRouter {
       return ctx.body = returnBody(500, '', '获取用户信息失败')
     }
 
-    @Get('/getalluser')
-    @Auth(2)
-    async allUser (ctx, next) {
-      ctx.body = await getAllUsers(ctx.query.hotkey, ctx.query.page)
+    @Post('/saveUserInfo')
+    @Required({
+      body: ['nickName']
+    })
+    @Auth(1)
+    async saveInfo (ctx, next) {
+      ctx.body = await saveUserInfo(ctx.request)
     }
 
     @Put('/changerole')

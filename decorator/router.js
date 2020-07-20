@@ -2,7 +2,7 @@ import { resolve } from 'path'
 import KoaRouter from 'koa-router'
 import glob from 'glob'
 import R from 'ramda'
-import { checkAuth } from '../services/user'
+import { findAndCreatUser } from '../services/user'
 import { returnBody } from '../services/common'
 
 const pathPrefix = Symbol('pathPrefix')
@@ -114,12 +114,12 @@ export const CheckEmpty = paramsObj => convert(async (ctx, next) => {
 })
 
 export const Auth = paramsObj => convert(async (ctx, next) => {
-  if (!(ctx.request.header.authorization && ctx.request.header.authorization.length === 24)) {
+  if (!(ctx.request.header.authorization && ctx.request.header.authorization.length === 28)) {
     // return ctx.res.writeHead(401)
     return (ctx.body = returnBody(401, '', '登陆信息已失效, 请重新登陆'))
   } else if (paramsObj) {
     // 如果token存在就去查找权限是否正确
-    const x = await checkAuth(ctx.request.header.authorization)
+    const x = await findAndCreatUser(ctx.request.header.authorization)
     if (!x || (x.role < paramsObj)) {
       return (ctx.body = returnBody(400, '','权限不足'))
     } else {
