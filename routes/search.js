@@ -7,14 +7,14 @@ import {
     Log
 } from '../decorator/router'
 
-import { findCompany, adminFindCompany } from '../services/searchService'
+import { findStudent, adminFindCompany } from '../services/searchService'
 
 @Controller('/search')
 export default class SearchPage {
   @Get('/student')
   @Auth(1)
   async searchFromKey (ctx, next) {
-    const x = await findCompany(ctx.query.key)
+    const x = await findStudent(ctx.query, ctx.request.body.userinfo)
     ctx.type = 'text/json; charset=utf-8'
     ctx.body = x
     await next()

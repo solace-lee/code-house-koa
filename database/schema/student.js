@@ -3,11 +3,11 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const StudentSchema = new Schema({
-    studentname: {
+    student_name: {
         type: String,
         required: true,
     },
-    studentid: {
+    student_id: {
         type: String,
         required: true,
     },
@@ -15,7 +15,7 @@ const StudentSchema = new Schema({
         type: String,
         required: true
     },
-    createuser: {
+    create_user: {
         type: String,
         required: true
     },

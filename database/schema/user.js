@@ -6,27 +6,15 @@ import mongoose from 'mongoose'
 // const LOCK_TIME = 2 * 60 * 60 * 1000
 const Schema = mongoose.Schema
 
-const BindList = new Schema({
-    student_name: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    student_id: {
-        type: String,
-        required: true,
-        unique: true
-    }
-}, {
-    _id: false
-})
-
 const UserSchema = new Schema({
     role: {
         type: Number,
         default: 1 // 1是家长用户， 2是教师用户，3是超管
     },
-    bind_list: [BindList],
+    bind_list: {
+        type: Array,
+        default: []
+    },
     openid: {
         type: String,
         required: true,
@@ -59,6 +47,10 @@ const UserSchema = new Schema({
     inviter: {
         type: String,
         default: '' // 教师账号的邀请人，openid
+    },
+    apply_list: {
+        type: Array,
+        default: []
     },
     is_del: {
         type: Boolean,

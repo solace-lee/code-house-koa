@@ -1,32 +1,73 @@
-// import mongoose from 'mongoose'
+import mongoose from 'mongoose'
 import { returnBody } from './common'
 
-// const Company = mongoose.model('Company')
+const Student = mongoose.model('Student')
+const TeacherStudent = mongoose.model('TeacherStudent')
 
-export const findCompany = async (key) => {
-    const companyList = await Company.find(
-        {
-            isverify: true,
-            isdelete: false,
-            $or: [
-                {
-                    companyname: {$regex: key || ''},
-                },
-                {
-                    companydetail: {$regex: key || ''}
-                }
-            ]
-        },
-        {
-            userid: 0,
-            isverify: 0,
-            isdelete: 0
-        }
-    )
-    .limit(40)
-    .sort({'meta.createAt': -1})
+export const findStudent = async (query, userInfo) => {
+    // 家长搜索学生成绩
+    console.log(userInfo);
+    // 找出教师学生家长的关联信息来
+    const detailList = await Student.find({
+        is_del: false,
+        student_name: query.name,
+        student_id: query.id
+    })
+    .sort({ 'meta.updateAt': -1 })
     .exec()
-    return returnBody(200, companyList, '查询成功')
+
+    if (detailList.length) {
+        
+    }
+
+    const lineList = await TeacherStudent.find({
+        is_del: false,
+        student_name: query.name
+        // student_id: query.id
+    })
+        // 找出教师学生家长的关联信息来
+        .sort({ 'meta.updateAt': -1 })
+        .exec()
+
+    if (!lineList.length) {
+        return returnBody(201, '', '没有找到相关记录')
+    }
+
+    const hasBind = lineList.filter(val => {
+        if (val.bind_openid.length) {
+            let bindStatus = false
+            for (let i = 0; i < val.bind_openid.length; i++) {
+                if (userInfo.openid === val.bind_openid[i]) {
+                    bindStatus = true
+                }
+            }
+            return bindStatus
+        } else {
+            return false
+        }
+    })
+
+    if (hasBind.length) {
+        // 存在绑定关系
+        
+    } else {
+        // 家长和学生还没有绑定关系
+    }
+
+
+
+    if (detailList.length) {
+        const bindList = userInfo.bind_list
+        if (bindList.length) {
+            // 用户存在绑定列表
+
+        }
+        return returnBody(200, detailList, '查询成功')
+    } else {
+        return returnBody(201, '', '没有找到相关记录')
+    }
+
+
 }
 
 export const adminFindCompany = async (body) => {
@@ -39,10 +80,10 @@ export const adminFindCompany = async (body) => {
         ...obj,
         $or: [
             {
-                companyname: {$regex: hotkey || ''},
+                companyname: { $regex: hotkey || '' },
             },
             {
-                companydetail: {$regex: hotkey || ''}
+                companydetail: { $regex: hotkey || '' }
             }
         ],
         'meta.updateAt': {
@@ -56,10 +97,10 @@ export const adminFindCompany = async (body) => {
             ...obj,
             $or: [
                 {
-                    companyname: {$regex: hotkey || ''},
+                    companyname: { $regex: hotkey || '' },
                 },
                 {
-                    companydetail: {$regex: hotkey || ''}
+                    companydetail: { $regex: hotkey || '' }
                 }
             ],
             'meta.updateAt': {
@@ -73,10 +114,10 @@ export const adminFindCompany = async (body) => {
             userid: 0
         }
     )
-    .limit(10)
-    .skip((page - 1) * 10)
-    .sort({'meta.updateAt': -1})
-    .exec()
+        .limit(10)
+        .skip((page - 1) * 10)
+        .sort({ 'meta.updateAt': -1 })
+        .exec()
     return returnBody(200, {
         pageTotle: Math.ceil(allConut / 10),
         page,

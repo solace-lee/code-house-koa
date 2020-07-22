@@ -1,17 +1,22 @@
 import mongoose from 'mongoose'
+// 关联表
 
 const Schema = mongoose.Schema
 
 const TeacherStudentSchema = new Schema({
-    openid: { // 教师OpenID
+    teacher_openid: { // 教师OpenID
         type: String,
         required: true
     },
-    studentname: {
+    bind_openid: { // 绑定的家长ID
+        type: Array,
+        default: []
+    },
+    student_name: {
         type: String,
         required: true,
     },
-    studentid: {
+    student_id: {
         type: Array,
         default: []
     },
