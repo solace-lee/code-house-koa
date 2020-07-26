@@ -20,6 +20,14 @@ const UserSchema = new Schema({
         required: true,
         unique: true
     },
+    username: {
+        type: String,
+        default: ''
+    },
+    password: {
+        type: String,
+        default: ''
+    },
     avatar_url: {
         type: String,
         default: ''

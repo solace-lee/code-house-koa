@@ -5,12 +5,14 @@ import R from 'ramda'
 const User = mongoose.model('User')
 
 export const findAndCreatUser = async (openid) => {
+    // 搜索现有用户并返回用户信息，或根据openID创建一个新用户并返回用户信息
     let user = await User.findOne({
         openid
     },
     {
         is_del: 0,
-        inviter: 0
+        inviter: 0,
+        password: 0
     }).exec()
 
     if (!user) {
@@ -20,7 +22,8 @@ export const findAndCreatUser = async (openid) => {
     return user
 }
 
-const _addNewUser = async openid => { // 添加用户和绑定表
+const _addNewUser = async openid => {
+    // 添加用户和绑定表
     const newUser = new User({
         openid
     })
@@ -38,6 +41,7 @@ const _addNewUser = async openid => { // 添加用户和绑定表
 
 
 export const saveUserInfo = async (req) => {
+    // 更新用户信息
     const success = await User.updateOne({
         openid: req.header.authorization
     }, {
@@ -54,6 +58,18 @@ export const saveUserInfo = async (req) => {
     } else {
         return returnBody(500, success, '保存失败')
     }
+}
+
+export const getUserInfo = async (req) => {
+    // 根据用户名和密码获取用户信息
+    const user = await User.findOne({
+        username: req.body.username,
+        password: req.body.password
+    },{
+        password: 0,
+    }).exec()
+    if (user) return returnBody(200, user, '成功')
+    return returnBody(500, {}, '没有找到相关用户')
 }
 
 
@@ -91,13 +107,3 @@ export const delUser = async id => {
     })
 }
 
-export const getUserInfo = async (id) => {
-    // 获取用户信息
-    const user = await User.findOne({_id: id},{
-        role: 1,
-        username: 1,
-        headimg: 1
-    }).exec()
-    if (user) return user
-    return {}
-}

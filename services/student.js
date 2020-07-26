@@ -4,7 +4,7 @@ import R from 'ramda'
 
 const Student = mongoose.model('Student')
 
-export const uploadList = async list => {
+export const uploadList = async (list, openid) => {
     if (R.isEmpty(list)) {
         return returnBody(400, '', '没有数据')
     }
@@ -12,76 +12,106 @@ export const uploadList = async list => {
     if (user) {
         return returnBody(400, '', '该备注已经存在了')
     }
-    return await new Promise((resolve, reject) => {
-        Student.insertMany(list)
-            .then(() => {
-                resolve (returnBody(200, '', '上传成功'))
-            })
-            .catch(e => {
-                resolve(returnBody(400, e))
-            })
+
+    for (let i = 0; i < list.length; i++) {
+        const element = list[i]
+        await _saveOneStudent(element, openid)
+    }
+
+
+    // return await new Promise((resolve, reject) => {
+    //     Student.insertMany(list)
+    //         .then(() => {
+    //             resolve (returnBody(200, '', '上传成功'))
+    //         })
+    //         .catch(e => {
+    //             resolve(returnBody(400, e))
+    //         })
+    // })
+}
+
+const _saveOneStudent = async (item, openid) => {
+    // 单个保存学生数据
+    let newStudent = new Student({
+        student_name: item.student_name,
+        student_id: item.student_id,
+        mark: item.mark,
+        create_user: item.create_user,
+        openid,
+        keywords: item.keywords,
+        detail: item.detail,
+        meta: item.meta
     })
-}
-
-export const getStudent = async (keyword) => {
-    const studentList = await Student.find({studentname:keyword}).sort({'meta.updateAt': -1}).exec()
-
-    if (studentList) {
-        return (returnBody(200, studentList, '获取成功'))
-    } else {
-        return (returnBody(200, [], '没有找到相关数据'))
-    }
-}
-
-
-export const getMark = async (hotkey, page) => {
-    page = page ? page : 1
-    const allConut = await Student.count({
-        $or: [
-            {
-                mark: {$regex: hotkey || ''},
-            },
-        ]
-    }).exec()
-
-    if (!allConut) {
-        return (returnBody(200, {
-            pageTotle: 0,
-            page,
-            studentList: []
-        }, '获取成功'))
-    }
-
-    const studentList = await Student.find(
-        {
-            $or: [
-                {
-                    mark: {$regex: hotkey || ''},
-                }
-            ],
-        }
-    )
-    .limit(1000)
-    .skip((page - 1) * 1000)
-    .sort({'meta.updateAt': -1})
-    .exec()
-
-    return returnBody(200, {
-        pageTotle: Math.ceil(allConut / 1000),
-        page,
-        studentList
-    }, '查询成功')
-}
-
-
-export const deletMark = async mark => {
-    return new Promise((resolve) => {
-        Student.deleteMany({mark: mark}, err => {
+    await new Promise((resolve, reject) => {
+        newStudent.save(err => {
             if (err) {
-                resolve(returnBody(400, err))
+                reject(err)
             } else {
-                resolve (returnBody(200, '', '删除数据成功'))
+                resolve(true)
             }
         })
     })
 }
+
+// export const getStudent = async (keyword) => {
+//     const studentList = await Student.find({studentname:keyword}).sort({'meta.updateAt': -1}).exec()
+
+//     if (studentList) {
+//         return (returnBody(200, studentList, '获取成功'))
+//     } else {
+//         return (returnBody(200, [], '没有找到相关数据'))
+//     }
+// }
+
+
+// export const getMark = async (hotkey, page) => {
+//     page = page ? page : 1
+//     const allConut = await Student.count({
+//         $or: [
+//             {
+//                 mark: {$regex: hotkey || ''},
+//             },
+//         ]
+//     }).exec()
+
+//     if (!allConut) {
+//         return (returnBody(200, {
+//             pageTotle: 0,
+//             page,
+//             studentList: []
+//         }, '获取成功'))
+//     }
+
+//     const studentList = await Student.find(
+//         {
+//             $or: [
+//                 {
+//                     mark: {$regex: hotkey || ''},
+//                 }
+//             ],
+//         }
+//     )
+//     .limit(1000)
+//     .skip((page - 1) * 1000)
+//     .sort({'meta.updateAt': -1})
+//     .exec()
+
+//     return returnBody(200, {
+//         pageTotle: Math.ceil(allConut / 1000),
+//         page,
+//         studentList
+//     }, '查询成功')
+// }
+
+
+// export const deletMark = async mark => {
+//     return new Promise((resolve) => {
+//         Student.deleteMany({mark: mark}, err => {
+//             if (err) {
+//                 resolve(returnBody(400, err))
+//             } else {
+//                 resolve (returnBody(200, '', '删除数据成功'))
+//             }
+//         })
+//     })
+// }

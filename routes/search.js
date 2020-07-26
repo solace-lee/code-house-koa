@@ -20,13 +20,13 @@ export default class SearchPage {
     await next()
   }
 
-  @Post('/adminCompanyList')
-  @Auth(2)
-  @Required({
-    body: ['page']
-  })
-  async adminList (ctx, next) {
-    const x = await adminFindCompany(ctx.request.body)
-    ctx.body = x
-  }
+  // @Post('/adminCompanyList')
+  // @Auth(2)
+  // @Required({
+  //   body: ['page']
+  // })
+  // async adminList (ctx, next) {
+  //   const x = await adminFindCompany(ctx.request.body)
+  //   ctx.body = x
+  // }
 }

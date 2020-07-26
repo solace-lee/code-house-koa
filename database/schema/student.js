@@ -9,7 +9,7 @@ const StudentSchema = new Schema({
     },
     student_id: {
         type: String,
-        required: true,
+        required: true
     },
     mark: {
         type: String,
