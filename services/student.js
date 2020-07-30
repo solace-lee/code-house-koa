@@ -8,10 +8,22 @@ export const uploadList = async (list, openid) => {
     if (R.isEmpty(list)) {
         return returnBody(400, '', '没有数据')
     }
-    const user = await Student.findOne({mark: list[0].mark}).exec()
+    const user = await Student.findOne({
+        mark: list[0].mark,
+        openid: list[0].openid
+    }).exec()
     if (user) {
         return returnBody(400, '', '该备注已经存在了')
     }
+    console.log(list)
+
+    const studentIdList = list.map(val => {
+        const a = {
+            student_name: val.student_name,
+            student_id: val.student_id
+        }
+        return a
+    })
 
     for (let i = 0; i < list.length; i++) {
         const element = list[i]
