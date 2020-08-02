@@ -181,7 +181,7 @@ export const getTeacherStudentList = async (ctx) => {
 
 
 export const getExamInfo = async (ctx) => {
-    // 获取教师学生对应列表 ctx.query
+    // 获取试卷列表 ctx.query
     const limit = Number(ctx.query.limit)
     const page = Number(ctx.query.page)
     const obj = {
@@ -228,7 +228,18 @@ export const getStuInfo = async (ctx) => {
             })
         }))
 
+        let blackLIst = await Promise.all(val.black_list.map(async (ele) => {
+            return await User.findOne({
+                openid: ele,
+                is_del: false
+            },
+            {
+                password: 0
+            })
+        }))
+
         val.bind_openid = newLIst
+        val.black_list = blackLIst
         return val
     }))
     const examInfo = await Student.find({

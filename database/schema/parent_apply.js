@@ -14,6 +14,10 @@ const ParentApplySchema = new Schema({
         type: String,
         required: true,
     },
+    detail: {
+        type: String,
+        default: ''
+    },
     is_del: {
         type: Boolean,
         default: false

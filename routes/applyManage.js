@@ -8,7 +8,7 @@ import {
 } from '../decorator/router'
 
 import { returnBody } from '../services/common'
-import { getParentApply } from '../services/apply'
+import { getParentApply, getCount } from '../services/apply'
 
 @Controller('/apply')
 export default class ApplyRouter {
@@ -16,5 +16,11 @@ export default class ApplyRouter {
   @Auth(2)
   async getParentApplyList (ctx, next) {
     return ctx.body = await getParentApply(ctx)
+  }
+
+  @Get('/count')
+  @Auth(2)
+  async getParentCount (ctx, next) {
+    return ctx.body = await getCount(ctx)
   }
 }
