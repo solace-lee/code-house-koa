@@ -12,13 +12,17 @@ const TeacherStudentSchema = new Schema({
         type: Array,
         default: []
     },
+    black_list: { // 家长的黑名单列表,openid
+        type: Array,
+        default: []
+    },
     student_name: {
         type: String,
         required: true,
     },
     student_id: {
-        type: Array,
-        default: []
+        type: String,
+        default: ''
     },
     is_del: {
         type: Boolean,

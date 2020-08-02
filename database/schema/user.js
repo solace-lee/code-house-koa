@@ -11,7 +11,7 @@ const UserSchema = new Schema({
         type: Number,
         default: 1 // 1是家长用户， 2是教师用户，3是超管
     },
-    bind_list: {
+    bind_list: { // 对应教师学生映射表中的ID
         type: Array,
         default: []
     },

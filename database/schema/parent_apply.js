@@ -2,15 +2,15 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const ParentApplySchema = new Schema({
-    openid: { // 家长的openID
+    parent_openid: { // 家长的openID
         type: String,
         required: true
     },
-    studentname: {
+    teacher_student_id: {
         type: String,
         required: true,
     },
-    studentid: {
+    teacher_openid: {
         type: String,
         required: true,
     },
@@ -18,25 +18,14 @@ const ParentApplySchema = new Schema({
         type: Boolean,
         default: false
     },
-    meta: {
-        createAt: {
-            type: Date,
-            default: Date.now()
-        },
-        updateAt: {
-            type: Date,
-            default: Date.now()
-        }
-    }
+    create_date: {
+        type: Date
+    },
 })
 
 
 ParentApplySchema.pre('save', function (next) {
-    if (this.isNew) {
-        this.meta.createAt = this.meta.updateAt = Date.now()
-    } else {
-        this.meta.updateAt = Date.now()
-    }
+    this.create_date = Date.now()
     next()
 })
 

@@ -7,17 +7,39 @@ import {
     Log
 } from '../decorator/router'
 
-import { findStudent, adminFindCompany } from '../services/searchService'
+import {
+  findStudent,
+  getTeacherStudentList,
+  getExamInfo,
+  getStuInfo
+} from '../services/searchService'
 
 @Controller('/search')
 export default class SearchPage {
   @Get('/student')
   @Auth(1)
   async searchFromKey (ctx, next) {
-    const x = await findStudent(ctx.query, ctx.request.body.userinfo)
     ctx.type = 'text/json; charset=utf-8'
-    ctx.body = x
+    ctx.body = await findStudent(ctx.query, ctx.request.body.userinfo)
     await next()
+  }
+
+  @Get('/teacherStudent')
+  @Auth(2)
+  async findTeacherStudent (ctx, next) {
+    ctx.body = await getTeacherStudentList(ctx)
+  }
+
+  @Get('/examInfo')
+  @Auth(2)
+  async findExamList (ctx, next) {
+    ctx.body = await getExamInfo(ctx)
+  }
+
+  @Get('/stuInfo')
+  @Auth(2)
+  async findStudentInfo (ctx, next) {
+    ctx.body = await getStuInfo(ctx)
   }
 
   // @Post('/adminCompanyList')
