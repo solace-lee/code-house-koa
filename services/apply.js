@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import { returnBody } from './common'
 import { findAndCreatUser } from './user'
 
-// const User = mongoose.model('User')
+const User = mongoose.model('User')
 const TeacherStudent = mongoose.model('TeacherStudent')
 const ParentApply = mongoose.model('ParentApply')
 
@@ -34,4 +34,140 @@ export const getCount = async (ctx) => {
     is_del: false
   }).exec()
   return returnBody(200, applyCount, '成功')
+}
+
+export const addToBlack = async (ctx) => {
+  // 把家长加入到某条的黑名单
+  const teacherStudentId = ctx.request.body.teacherStudentId
+  const parentOpenid = ctx.request.body.parentOpenid
+  const applyId = ctx.request.body.applyId
+
+  // 查找该家长
+  let parent = await User.findOne({
+    openid: parentOpenid,
+    is_del: false
+  }).exec()
+
+  if (parent) {
+    // 移除家长对应的绑定列表，如果有的话
+    parent.bind_list = parent.bind_list.filter(val => val !== teacherStudentId)
+    parent.save(err => {
+      if (err) {
+        console.log(err, '保存家长黑名单错误')
+      }
+    })
+  }
+
+  let teacherStu = await TeacherStudent.findOne({
+    _id: teacherStudentId,
+    is_del: false
+  }).exec()
+
+  if (teacherStu) {
+    // 标识为已读并添加家长openID到黑名单中
+    teacherStu.bind_openid = teacherStu.bind_openid.filter(val => val !== parentOpenid)
+    teacherStu.black_list = teacherStu.black_list.filter(val => val !== parentOpenid)
+    teacherStu.black_list.push(parentOpenid)
+    teacherStu.save(err => {
+      if (err) {
+        console.log(err, '教师学生映射表添加黑名单失败')
+      }
+    })
+  }
+
+  let applyItem = await ParentApply.findOne({
+    _id: applyId,
+    is_del: false
+  })
+
+  if (applyItem) {
+    applyItem.is_del = true
+    applyItem.save(err => {
+      if (err) {
+        console.log(err, '更新申请失败')
+      }
+    })
+  }
+
+  return returnBody(200, '', '添加黑名单成功')
+
+}
+
+export const applyRead = async (ctx) => {
+  const applyId = ctx.request.body.applyId
+
+  let applyItem = await ParentApply.findOne({
+    _id: applyId,
+    is_del: false
+  })
+
+  if (applyItem) {
+    applyItem.is_del = true
+    applyItem.save(err => {
+      if (err) {
+        console.log(err, '更新申请失败')
+      }
+    })
+  }
+
+  return returnBody(200, '', '忽略成功')
+
+}
+
+export const setApplyPass = async (ctx) => {
+  // 通过家长申请
+  const teacherStudentId = ctx.request.body.teacherStudentId
+  const parentOpenid = ctx.request.body.parentOpenid
+  const applyId = ctx.request.body.applyId
+
+  // 查找该家长
+  let parent = await User.findOne({
+    openid: parentOpenid,
+    is_del: false
+  }).exec()
+
+  if (parent) {
+    // 添加家长对应的绑定
+    parent.bind_list = parent.bind_list.filter(val => val !== teacherStudentId)
+    parent.bind_list.push(teacherStudentId)
+    parent.save(err => {
+      if (err) {
+        console.log(err, '保存家长绑定列表错误')
+      }
+    })
+  }
+
+  let teacherStu = await TeacherStudent.findOne({
+    _id: teacherStudentId,
+    is_del: false
+  }).exec()
+
+  if (teacherStu) {
+    // 标识为已读并添加家长openID到绑定列表中
+    teacherStu.bind_openid = teacherStu.bind_openid.filter(val => val !== parentOpenid)
+    teacherStu.bind_openid.push(parentOpenid)
+    teacherStu.black_list = teacherStu.black_list.filter(val => val !== parentOpenid)
+    teacherStu.save(err => {
+      if (err) {
+        console.log(err, '教师学生映射表添加绑定列表失败')
+      }
+    })
+  }
+
+  let applyItem = await ParentApply.findOne({
+    _id: applyId,
+    is_del: false
+  })
+
+  if (applyItem) {
+    applyItem.is_del = true
+    applyItem.save(err => {
+      if (err) {
+        console.log(err, '更新申请失败')
+      }
+    })
+  }
+
+  return returnBody(200, '', '添加绑定成功')
+
 }
