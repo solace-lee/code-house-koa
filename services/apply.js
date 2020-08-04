@@ -5,6 +5,7 @@ import { findAndCreatUser } from './user'
 const User = mongoose.model('User')
 const TeacherStudent = mongoose.model('TeacherStudent')
 const ParentApply = mongoose.model('ParentApply')
+const HistoryLog = mongoose.model('HistoryLog')
 
 export const getParentApply = async (ctx) => {
   const openid = ctx.request.header.authorization
@@ -40,7 +41,7 @@ export const addToBlack = async (ctx) => {
   // 把家长加入到某条的黑名单
   const teacherStudentId = ctx.request.body.teacherStudentId
   const parentOpenid = ctx.request.body.parentOpenid
-  const applyId = ctx.request.body.applyId
+  const applyId = ctx.request.body.applyId || ''
 
   // 查找该家长
   let parent = await User.findOne({
@@ -75,27 +76,15 @@ export const addToBlack = async (ctx) => {
     })
   }
 
-  let applyItem = await ParentApply.findOne({
-    _id: applyId,
-    is_del: false
-  })
-
-  if (applyItem) {
-    applyItem.is_del = true
-    applyItem.save(err => {
-      if (err) {
-        console.log(err, '更新申请失败')
-      }
-    })
+  if (applyId) {
+    await applyRead(applyId)
   }
 
   return returnBody(200, '', '添加黑名单成功')
-
 }
 
-export const applyRead = async (ctx) => {
-  const applyId = ctx.request.body.applyId
-
+export const applyRead = async (applyId) => {
+  // 将申请置为已读
   let applyItem = await ParentApply.findOne({
     _id: applyId,
     is_del: false
@@ -118,7 +107,7 @@ export const setApplyPass = async (ctx) => {
   // 通过家长申请
   const teacherStudentId = ctx.request.body.teacherStudentId
   const parentOpenid = ctx.request.body.parentOpenid
-  const applyId = ctx.request.body.applyId
+  const applyId = ctx.request.body.applyId || ''
 
   // 查找该家长
   let parent = await User.findOne({
@@ -154,20 +143,20 @@ export const setApplyPass = async (ctx) => {
     })
   }
 
-  let applyItem = await ParentApply.findOne({
-    _id: applyId,
-    is_del: false
-  })
-
-  if (applyItem) {
-    applyItem.is_del = true
-    applyItem.save(err => {
-      if (err) {
-        console.log(err, '更新申请失败')
-      }
-    })
+  if (applyId) {
+    await applyRead(applyId)
   }
 
   return returnBody(200, '', '添加绑定成功')
 
+}
+
+export const checkHistory = async ctx => {
+  // 获取用户查询记录
+  const historyList = await HistoryLog.find({
+    openid: ctx.query.userOpenid
+  }).sort({ createAt: -1 })
+    .limit(50)
+
+  return returnBody(200, historyList, '成功')
 }

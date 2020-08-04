@@ -13,7 +13,8 @@ import {
   getCount,
   addToBlack,
   applyRead,
-  setApplyPass
+  setApplyPass,
+  checkHistory
 } from '../services/apply'
 
 @Controller('/apply')
@@ -39,12 +40,18 @@ export default class ApplyRouter {
   @Put('/setRead')
   @Auth(2)
   async setApplyRead (ctx, next) {
-    return ctx.body = await applyRead(ctx)
+    return ctx.body = await applyRead(ctx.request.body.applyId)
   }
 
   @Put('/applyPass')
   @Auth(2)
   async setPass (ctx, next) {
     return ctx.body = await setApplyPass(ctx)
+  }
+
+  @Get('/checkHistory')
+  @Auth(2)
+  async getCheckHistory (ctx, next) {
+    return ctx.body = await checkHistory(ctx)
   }
 }
