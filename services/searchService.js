@@ -308,10 +308,70 @@ export const examDelet = async ctx => {
     },
     {
         is_del: true
+    }, (err, res) => {
+        if (err) {
+        console.log(err, '更新试卷隐藏属性出错')
+        } else {
+            // 更新一下教师学生映射表
+            this._updataTeacherStu(openid)
+        }
     }).exec()
 
-    return returnBody(200, '', '成功')
+    return returnBody(200, '', '删除成功')
 }
+
+const _updataTeacherStu = async (openid) => {
+    let teacherStuList = TeacherStudent.find({
+        is_del: false,
+        teacher_openid: openid
+    })
+
+    await Promise.all(teacherStuList.forEach(async val => {
+        const result = await Student.find({
+            student_name: val.student_name,
+            student_id: val.student_id,
+            is_del: false,
+            openid: openid
+        }).exec()
+
+        if (!result.length) {
+            // 如果已经没有该学生的任何试卷信息则删除
+            await TeacherStudent.findByIdAndUpdate(val._id,
+                {
+                    is_del: true
+                    // bind_openid: [] // 是否该清空呢
+                },
+                async (err, res) => {
+                    if (err) {
+                        console.log(err, '教师学生关联表标识删除失败')
+                    } else {
+                        console.log(res, '被删除的教师学生关联表');
+                        // 删除和家长的绑定关系
+                        await Promise.all(res.bind_openid.forEach(async ele => {
+                            // 查找该家长
+                            let parent = await User.findOne({
+                                openid: ele,
+                                is_del: false
+                            }).exec()
+
+                            if (parent) {
+                                // 添加家长对应的绑定
+                                parent.bind_list = parent.bind_list.filter(value => value !== val._id)
+                                parent.black_list = parent.bind_list.filter(value => value !== val._id)
+                                parent.save(err => {
+                                if (err) {
+                                    console.log(err, '保存家长绑定列表错误')
+                                }
+                                })
+                            }
+                        }))
+                    }
+            })
+            
+        }
+    }))
+}
+
 // export const adminFindCompany = async (body) => {
 //     const { page, isverify, isdelete, hotkey, beginTime, endTime } = body
 //     const obj = {}
