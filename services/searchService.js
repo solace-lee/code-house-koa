@@ -254,6 +254,64 @@ export const getStuInfo = async (ctx) => {
         examInfo
     }, '查询成功')
 }
+
+export const examHidden = async (ctx) => {
+    const action = ctx.request.body.hidden
+    const openid = ctx.request.header.authorization
+    const id = ctx.request.body.id
+    let mark = ''
+    await ExamList.findByIdAndUpdate({
+        _id: id
+    },
+    {
+        is_hidden: action
+    }, (err, res) => {
+        if (err) {
+        console.log(err, '更新试卷隐藏属性出错')
+        } else {
+            mark = res.exam_mark
+        }
+    })
+
+    await Student.updateMany({
+        mark: mark,
+        openid,
+        is_del: false
+    },
+    {
+        is_hidden: action
+    }).exec()
+    return returnBody(200, '', '成功')
+}
+
+export const examDelet = async ctx => {
+    const openid = ctx.request.header.authorization
+    const id = ctx.params.id
+    let mark = ''
+    await ExamList.findByIdAndUpdate({
+        _id: id
+    },
+    {
+        is_del: true
+    }, (err, res) => {
+        if (err) {
+        console.log(err, '更新试卷隐藏属性出错')
+        } else {
+            mark = res.exam_mark
+        }
+    })
+
+    await Student.updateMany({
+        mark: mark,
+        openid,
+        is_del: false
+    },
+    {
+        is_del: true
+    }).exec()
+
+    return returnBody(200, '', '成功')
+}
 // export const adminFindCompany = async (body) => {
 //     const { page, isverify, isdelete, hotkey, beginTime, endTime } = body
 //     const obj = {}

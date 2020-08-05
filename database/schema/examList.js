@@ -16,6 +16,10 @@ const ExamlistSchema = new Schema({
     create_date: {
         type: Date
     },
+    is_hidden: {
+        type: Boolean,
+        default: false
+    },
     is_del: {
         type: Boolean,
         default: false

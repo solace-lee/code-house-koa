@@ -3,6 +3,7 @@ import { returnBody } from './common'
 import R from 'ramda'
 
 const User = mongoose.model('User')
+const TeacherStudent = mongoose.model('TeacherStudent')
 
 export const findAndCreatUser = async (openid) => {
     // 搜索现有用户并返回用户信息，或根据openID创建一个新用户并返回用户信息
@@ -17,6 +18,12 @@ export const findAndCreatUser = async (openid) => {
 
     if (!user) {
         user = await _addNewUser(openid)
+    }
+
+    if (user.bind_list.length) {
+        user.bind_list = await Promise.all(user.bind_list.map(async val => {
+            return await TeacherStudent.findById(val).exec()
+        }))
     }
 
     return user

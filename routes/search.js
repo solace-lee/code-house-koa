@@ -1,7 +1,8 @@
 import {
     Controller,
     Required,
-    Post,
+    Delete,
+    Put,
     Auth,
     Get,
     Log
@@ -11,7 +12,9 @@ import {
   findStudent,
   getTeacherStudentList,
   getExamInfo,
-  getStuInfo
+  getStuInfo,
+  examHidden,
+  examDelet
 } from '../services/searchService'
 
 @Controller('/search')
@@ -36,19 +39,21 @@ export default class SearchPage {
     ctx.body = await getExamInfo(ctx)
   }
 
+  @Put('/setHidden')
+  @Auth(2)
+  async setExamHidden (ctx, next) {
+    ctx.body = await examHidden(ctx)
+  }
+
+  @Delete('/deletExam/:id')
+  @Auth(2)
+  async toDeletExam (ctx, next) {
+    ctx.body = await examDelet(ctx)
+  }
+
   @Get('/stuInfo')
   @Auth(2)
   async findStudentInfo (ctx, next) {
     ctx.body = await getStuInfo(ctx)
   }
-
-  // @Post('/adminCompanyList')
-  // @Auth(2)
-  // @Required({
-  //   body: ['page']
-  // })
-  // async adminList (ctx, next) {
-  //   const x = await adminFindCompany(ctx.request.body)
-  //   ctx.body = x
-  // }
 }

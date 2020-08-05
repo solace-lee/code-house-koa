@@ -31,6 +31,10 @@ const StudentSchema = new Schema({
         type: Array,
         default: []
     },
+    is_hidden: {
+        type: Boolean,
+        default: false
+    },
     is_del: {
         type: Boolean,
         default: false
