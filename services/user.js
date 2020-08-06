@@ -21,8 +21,35 @@ export const findAndCreatUser = async (openid) => {
     }
 
     if (user.bind_list.length) {
+        let hasChange = false
+        let newList = []
+        for (let i = 0; i < user.bind_list.length; i++) {
+            const element = user.bind_list[i]
+            const a = await TeacherStudent.count({
+                _id: element,
+                is_del: false
+            }).exec()
+            if (a) {
+                newList.push(element)
+            } else {
+                hasChange = true
+            }
+            
+        }
+
+        user.bind_list = newList
+        if (hasChange) {
+            await user.save(err => {
+                if (err) {
+                    console.log(err, '更新绑定列表失败')
+                }
+            })
+        }
         user.bind_list = await Promise.all(user.bind_list.map(async val => {
-            return await TeacherStudent.findById(val).exec()
+            return await TeacherStudent.findOne({
+                _id: val,
+                is_del: false
+            }).exec()
         }))
     }
 

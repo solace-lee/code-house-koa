@@ -20,7 +20,8 @@ export const findStudent = async (query, userInfo) => {
     let detailList = await Student.find({
         is_del: false,
         student_name: name,
-        student_id: id
+        student_id: id,
+        is_hidden: false
     })
     .sort({ 'meta.updateAt': -1 })
     .exec()
@@ -38,9 +39,9 @@ export const findStudent = async (query, userInfo) => {
             val.black_list.forEach(ele => {
                 if (ele === openid) {
                     x = false
-                    detailList = detailList.filter(val => {
+                    detailList = detailList.filter(value => {
                         // 过滤掉该老师上传的学生信息
-                        return val.openid !== val.teacher_openid
+                        return value.openid !== val.teacher_openid
                     })
                 }
             })
@@ -290,12 +291,12 @@ export const examDelet = async ctx => {
     let mark = ''
     await ExamList.findByIdAndUpdate({
         _id: id
-    },
-    {
+    },{
         is_del: true
-    }, (err, res) => {
+    },
+    (err, res) => {
         if (err) {
-        console.log(err, '更新试卷隐藏属性出错')
+        console.log(err, '删除试卷列表出错')
         } else {
             mark = res.exam_mark
         }
@@ -313,7 +314,7 @@ export const examDelet = async ctx => {
         console.log(err, '更新试卷隐藏属性出错')
         } else {
             // 更新一下教师学生映射表
-            this._updataTeacherStu(openid)
+            _updataTeacherStu(openid)
         }
     }).exec()
 
@@ -321,55 +322,35 @@ export const examDelet = async ctx => {
 }
 
 const _updataTeacherStu = async (openid) => {
-    let teacherStuList = TeacherStudent.find({
+    let teacherStuList = await TeacherStudent.find({
+        // 该老师下的所有教师学生关联表
         is_del: false,
         teacher_openid: openid
     })
 
-    await Promise.all(teacherStuList.forEach(async val => {
-        const result = await Student.find({
-            student_name: val.student_name,
-            student_id: val.student_id,
+    for (let i = 0; i < teacherStuList.length; i++) {
+        const element = teacherStuList[i];
+        const result = await Student.count({
+            student_name: element.student_name,
+            student_id: element.student_id,
             is_del: false,
             openid: openid
         }).exec()
 
-        if (!result.length) {
-            // 如果已经没有该学生的任何试卷信息则删除
-            await TeacherStudent.findByIdAndUpdate(val._id,
+        if (!result) {
+            // 如果没有找到学生就删除这个关联关系
+            await TeacherStudent.findByIdAndUpdate(element._id,
                 {
                     is_del: true
-                    // bind_openid: [] // 是否该清空呢
                 },
                 async (err, res) => {
                     if (err) {
                         console.log(err, '教师学生关联表标识删除失败')
-                    } else {
-                        console.log(res, '被删除的教师学生关联表');
-                        // 删除和家长的绑定关系
-                        await Promise.all(res.bind_openid.forEach(async ele => {
-                            // 查找该家长
-                            let parent = await User.findOne({
-                                openid: ele,
-                                is_del: false
-                            }).exec()
-
-                            if (parent) {
-                                // 添加家长对应的绑定
-                                parent.bind_list = parent.bind_list.filter(value => value !== val._id)
-                                parent.black_list = parent.bind_list.filter(value => value !== val._id)
-                                parent.save(err => {
-                                if (err) {
-                                    console.log(err, '保存家长绑定列表错误')
-                                }
-                                })
-                            }
-                        }))
                     }
             })
-            
         }
-    }))
+
+    }
 }
 
 // export const adminFindCompany = async (body) => {

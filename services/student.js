@@ -40,6 +40,7 @@ const _saveOneStudent = async (item, openid) => {
         student_name: item.student_name,
         student_id: item.student_id,
         mark: item.mark,
+        is_del: false,
         create_user: item.create_user,
         openid,
         keywords: item.keywords,
@@ -62,7 +63,8 @@ const _saveTeacherStudent = async (listItem, openid) => {
     const obj = {
         student_name: listItem.student_name,
         student_id: listItem.student_id,
-        teacher_openid: openid
+        teacher_openid: openid,
+        is_del: false
     }
     const teacherStudent = await TeacherStudent.find(obj)
     if (teacherStudent.length) return true
@@ -85,7 +87,8 @@ const _saveExamInfo = async (mark, count, openid) => {
         openid,
         exam_mark: mark,
         create_date: new Date(),
-        student_count: count
+        student_count: count,
+        is_del: false
     })
     news.save(err => {
         if (err) {

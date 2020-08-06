@@ -10,7 +10,6 @@ const ExamlistSchema = new Schema({
     },
     exam_mark: {
         type: String,
-        unique: true,
         required: true
     },
     create_date: {
