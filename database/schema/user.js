@@ -13,7 +13,7 @@ const UserSchema = new Schema({
     },
     bind_list: { // 对应教师学生映射表中的ID
         type: Array,
-        default: []
+        default: [String]
     },
     openid: {
         type: String,
