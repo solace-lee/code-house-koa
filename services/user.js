@@ -8,7 +8,8 @@ const TeacherStudent = mongoose.model('TeacherStudent')
 export const findAndCreatUser = async (openid) => {
     // 搜索现有用户并返回用户信息，或根据openID创建一个新用户并返回用户信息
     let user = await User.findOne({
-        openid
+        openid,
+        is_del: false
     },
     {
         is_del: 0,
@@ -104,6 +105,20 @@ export const getUserInfo = async (req) => {
     }).exec()
     if (user) return returnBody(200, user, '成功')
     return returnBody(500, {}, '没有找到相关用户')
+}
+
+
+export const savePassword = async (req) => {
+    const openid = req.header.authorization
+    const newUserName = req.body.username
+    const newPassword = req.body.password
+    await User.updateOne({
+        openid
+    },{
+        username: newUserName,
+        password: newPassword
+    }).exec()
+    return returnBody(200, user, '成功')
 }
 
 

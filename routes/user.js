@@ -13,6 +13,7 @@ import {
   findAndCreatUser,
   saveUserInfo,
   getUserInfo,
+  savePassword,
   changeRole,
   delUser
 } from '../services/user'
@@ -48,6 +49,24 @@ export default class UserRouter {
       // 根据用户名和密码获取用户信息,给网页使用，上传数据前获取用户信息
       ctx.body = await getUserInfo(ctx.request)
     }
+
+    @Post('/setPassword')
+    @Auth(2)
+    @Required({
+      body: ['username', 'password']
+    })
+    async setUserLoginInfo (ctx, next) {
+      // 保存用户账号和密码用于网页登录
+      ctx.body = await savePassword(ctx.request)
+    }
+
+    @Get('/getPasswordStatus')
+    @Auth(2)
+    async getStatus (ctx, next) {
+      // 保存用户账号和密码用于网页登录
+      ctx.body = await getPwStatus(ctx)
+    }
+
 
     // @Put('/changerole')
     // @Auth(2)
