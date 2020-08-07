@@ -122,6 +122,11 @@ export const savePassword = async (req) => {
 }
 
 
+export const getPwStatus = async (ctx) => {
+    // 查询是否设置了密码
+}
+
+
 
 
 

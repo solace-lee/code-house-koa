@@ -14,6 +14,7 @@ import {
   saveUserInfo,
   getUserInfo,
   savePassword,
+  getPwStatus,
   changeRole,
   delUser
 } from '../services/user'
@@ -63,7 +64,7 @@ export default class UserRouter {
     @Get('/getPasswordStatus')
     @Auth(2)
     async getStatus (ctx, next) {
-      // 保存用户账号和密码用于网页登录
+      // 查询是否设置了密码
       ctx.body = await getPwStatus(ctx)
     }
 
