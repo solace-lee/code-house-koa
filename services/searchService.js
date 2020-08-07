@@ -85,7 +85,7 @@ export const findStudent = async (query, userInfo) => {
 
                 } else {
                     // 家长一个学生都没有绑定，且学生也没被绑定，直接绑定
-                    newUser.bind_list.push(val._id)
+                    newUser.bind_list.push(String(val._id))
                     newUser.save(err => {
                         if (err) {
                             console.log(err, '绑定家长出错')
