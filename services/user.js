@@ -112,18 +112,31 @@ export const savePassword = async (req) => {
     const openid = req.header.authorization
     const newUserName = req.body.username
     const newPassword = req.body.password
+    if (!(/^[\u4E00-\u9FA5A-Za-z0-9]+$/.test(newPassword)) && newPassword.length > 3 && newPassword.length < 16) {
+        return returnBody(500, '', '密码不符合规则')
+    }
     await User.updateOne({
         openid
     },{
         username: newUserName,
         password: newPassword
     }).exec()
-    return returnBody(200, user, '成功')
+    return returnBody(200, '', '成功')
 }
 
 
 export const getPwStatus = async (ctx) => {
     // 查询是否设置了密码
+    const openid = ctx.request.header.authorization
+    let user = await User.find({
+        openid
+    }).exec()
+    if (user) {
+        user.password = password.length
+        return returnBody(200, user, '成功')
+    } else {
+        return returnBody(500, '', '访问失败')
+    }
 }
 
 
