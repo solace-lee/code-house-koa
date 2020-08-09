@@ -15,6 +15,9 @@ import {
   getUserInfo,
   savePassword,
   getPwStatus,
+  inviteStatus,
+  createInvite,
+  confirmInviteCode,
   changeRole,
   delUser
 } from '../services/user'
@@ -54,7 +57,7 @@ export default class UserRouter {
     @Post('/setPassword')
     @Auth(2)
     @Required({
-      body: ['username', 'password']
+      body: ['username']
     })
     async setUserLoginInfo (ctx, next) {
       // 保存用户账号和密码用于网页登录
@@ -66,6 +69,28 @@ export default class UserRouter {
     async getStatus (ctx, next) {
       // 查询是否设置了密码
       ctx.body = await getPwStatus(ctx)
+    }
+
+
+    @Get('/getInvite')
+    @Auth(2)
+    async getInviteStatus (ctx, next) {
+      // 查询是否设置了密码
+      ctx.body = await inviteStatus(ctx)
+    }
+
+    @Post('/createCode')
+    @Auth(2)
+    async createInviteCode (ctx, next) {
+      // 查询是否设置了密码
+      ctx.body = await createInvite(ctx)
+    }
+
+    @Put('/confirmInvite')
+    @Auth(1)
+    async makeConfirmInvite (ctx, next) {
+      // 查询是否设置了密码
+      ctx.body = await confirmInviteCode(ctx)
     }
 
 
