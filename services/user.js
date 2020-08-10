@@ -61,7 +61,8 @@ export const findAndCreatUser = async (openid) => {
 const _addNewUser = async openid => {
     // 添加用户和绑定表
     const newUser = new User({
-        openid
+        openid,
+        role: 2 // 为满足小程序审核
     })
 
     return new Promise((resolve, reject) => {
@@ -165,10 +166,15 @@ export const inviteStatus = async (ctx) => {
 
 export const createInvite = async (ctx) => {
     const openid = ctx.request.header.authorization
-    const x = await TeacherInvitation.count({
-        openid,
-        // is_del: true // 目前限制一个用户只允许生成一个邀请码
-    })
+    const role = ctx.request.body.userinfo.role
+    let obj = {
+        openid
+    }
+    if (role > 2) {
+        // is_del: true // 目前限制一个用户只允许生成一个邀请码, 超管没有限制
+        obj.is_del = false
+    }
+    const x = await TeacherInvitation.count(obj)
     if (x) {
         return returnBody(500, '', '邀请人数已达上限，无法生成')
     } else {
@@ -254,33 +260,33 @@ export const confirmInviteCode = async (ctx) => {
 
 
 
-const _changeRole = async (id, newRole) => {
-    return new Promise((resolve) => {
-        User.update(
-            { _id: id },
-            {
-                role: newRole
-            },
-            err => {
-                if (err) {
-                    resolve(returnBody(400, err))
-                } else {
-                    resolve (returnBody(200, '', '修改成功'))
-                }
-            }
-        )
-    })
-}
+// const _changeRole = async (id, newRole) => {
+//     return new Promise((resolve) => {
+//         User.update(
+//             { _id: id },
+//             {
+//                 role: newRole
+//             },
+//             err => {
+//                 if (err) {
+//                     resolve(returnBody(400, err))
+//                 } else {
+//                     resolve (returnBody(200, '', '修改成功'))
+//                 }
+//             }
+//         )
+//     })
+// }
 
-export const delUser = async id => {
-    return new Promise((resolve) => {
-        User.remove({_id: id}, err => {
-            if (err) {
-                resolve(returnBody(400, err))
-            } else {
-                resolve (returnBody(200, '', '删除用户成功'))
-            }
-        })
-    })
-}
+// export const delUser = async id => {
+//     return new Promise((resolve) => {
+//         User.remove({_id: id}, err => {
+//             if (err) {
+//                 resolve(returnBody(400, err))
+//             } else {
+//                 resolve (returnBody(200, '', '删除用户成功'))
+//             }
+//         })
+//     })
+// }
 
