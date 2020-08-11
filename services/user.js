@@ -62,7 +62,7 @@ const _addNewUser = async openid => {
     // 添加用户和绑定表
     const newUser = new User({
         openid,
-        role: 2 // 为满足小程序审核
+        // role: 2 // 为满足小程序审核
     })
 
     return new Promise((resolve, reject) => {
