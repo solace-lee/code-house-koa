@@ -12,9 +12,6 @@ const ExamlistSchema = new Schema({
         type: String,
         required: true
     },
-    create_date: {
-        type: Date
-    },
     is_hidden: {
         type: Boolean,
         default: false
@@ -26,7 +23,16 @@ const ExamlistSchema = new Schema({
     student_count: {
         type: Number,
         required: true
+    },
+    create_date: {
+        type: String,
+        default: '1590084000000'
     }
 })
+
+ExamlistSchema.pre('save', function (next) {
+    this.create_date = new Date().getTime().toString()
+    next()
+  })
 
 mongoose.model('ExamList', ExamlistSchema)

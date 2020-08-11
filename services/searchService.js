@@ -23,7 +23,7 @@ export const findStudent = async (query, userInfo) => {
         student_id: id,
         is_hidden: false
     })
-    .sort({ 'meta.updateAt': -1 })
+    .sort({ 'create_date': -1 })
     .exec()
 
     if (detailList.length) {

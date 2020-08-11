@@ -18,15 +18,15 @@ const HistorySchema = new Schema({
         type: Boolean,
         default: false
     },
-    createAt: {
-      type: Date,
-      default: Date.now()
+    create_date: {
+      type: String,
+      default: '1590084000000'
     }
 })
 
 
 HistorySchema.pre('save', function (next) {
-  this.updateAt = Date.now()
+  this.create_date = new Date().getTime().toString()
   next()
 })
 

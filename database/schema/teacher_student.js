@@ -28,26 +28,15 @@ const TeacherStudentSchema = new Schema({
         type: Boolean,
         default: false
     },
-    meta: {
-        createAt: {
-            type: Date,
-            default: Date.now()
-        },
-        updateAt: {
-            type: Date,
-            default: Date.now()
-        }
+    create_date: {
+        type: String,
+        default: '1590084000000'
     }
 })
 
 TeacherStudentSchema.pre('save', function (next) {
-    if (this.isNew) {
-        this.meta.createAt = this.meta.updateAt = Date.now()
-    } else {
-        this.meta.updateAt = Date.now()
-    }
+    this.create_date = new Date().getTime().toString()
     next()
 })
-
 
 mongoose.model('TeacherStudent', TeacherStudentSchema)

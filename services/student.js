@@ -86,7 +86,6 @@ const _saveExamInfo = async (mark, count, openid) => {
     const news = new ExamList({
         openid,
         exam_mark: mark,
-        create_date: new Date(),
         student_count: count,
         is_del: false
     })

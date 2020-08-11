@@ -39,12 +39,15 @@ const StudentSchema = new Schema({
         type: Boolean,
         default: false
     },
-    meta: {
-        updateAt: {
-            type: String,
-            default: '1590084000000'
-        }
+    create_date: {
+        type: String,
+        default: '1590084000000'
     }
+})
+
+StudentSchema.pre('save', function (next) {
+    this.create_date = new Date().getTime().toString()
+    next()
 })
 
 

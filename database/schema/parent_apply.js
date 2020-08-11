@@ -23,13 +23,14 @@ const ParentApplySchema = new Schema({
         default: false
     },
     create_date: {
-        type: Date
+        type: String,
+        default: '1590084000000'
     },
 })
 
 
 ParentApplySchema.pre('save', function (next) {
-    this.create_date = Date.now()
+    this.create_date = new Date().getTime().toString()
     next()
 })
 
