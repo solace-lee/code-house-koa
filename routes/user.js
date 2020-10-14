@@ -75,21 +75,21 @@ export default class UserRouter {
     @Get('/getInvite')
     @Auth(2)
     async getInviteStatus (ctx, next) {
-      // 查询是否设置了密码
+      // 查询是否设置了邀请码
       ctx.body = await inviteStatus(ctx)
     }
 
     @Post('/createCode')
     @Auth(2)
     async createInviteCode (ctx, next) {
-      // 查询是否设置了密码
+      // 创建教师邀请码
       ctx.body = await createInvite(ctx)
     }
 
     @Put('/confirmInvite')
     @Auth(1)
     async makeConfirmInvite (ctx, next) {
-      // 查询是否设置了密码
+      // 教师邀请码校验
       ctx.body = await confirmInviteCode(ctx)
     }
 

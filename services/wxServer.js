@@ -4,6 +4,7 @@ import wechatConfig from '../config/wechatConfig'
 const http = new Interceptors().getInterceptors()
 
 export const getUnionId = async (ctx) => {
+  // 获取Unionid和openId
   if (ctx.query && ctx.query.code) {
     // 拿到code
     const { openid, unionid, session_key } = await _getWechatAccess(ctx.query.code, wechatConfig.appid, wechatConfig.appsecret)

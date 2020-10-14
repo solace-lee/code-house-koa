@@ -196,6 +196,7 @@ export const getExamInfo = async (ctx) => {
     }
     const allCount = await ExamList.count(obj)
     const examList = await ExamList.find(obj)
+        .sort({'create_date': -1})
         .limit(limit)
         .skip((page - 1) * limit)
         .exec()
@@ -248,7 +249,9 @@ export const getStuInfo = async (ctx) => {
         student_name: name,
         is_del: false,
         openid: openid
-    }).exec()
+    })
+    .sort({ 'meta.updateAt': -1 })
+    .exec()
 
     return returnBody(200, {
         teacherStudentInfo,
@@ -350,6 +353,22 @@ const _updataTeacherStu = async (openid) => {
             })
         }
 
+    }
+}
+
+export const examStuDetail = async (ctx) => {
+    // 教师根据试卷备注获取该试卷的学生名单
+    const openid = ctx.request.header.authorization
+    const mark = ctx.query.mark
+    const list = await Student.find({
+        mark,
+        openid,
+        is_del: false
+    }).exec()
+    if (list.length) {
+        return returnBody(200, list, '成功')
+    } else {
+        return returnBody(200, [], '没有找到数据')
     }
 }
 
