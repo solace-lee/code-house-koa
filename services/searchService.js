@@ -196,6 +196,7 @@ export const getExamInfo = async (ctx) => {
     }
     const allCount = await ExamList.count(obj)
     const examList = await ExamList.find(obj)
+        .sort({'create_date': -1})
         .limit(limit)
         .skip((page - 1) * limit)
         .exec()
