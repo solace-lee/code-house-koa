@@ -14,7 +14,8 @@ import {
   getExamInfo,
   getStuInfo,
   examHidden,
-  examDelet
+  examDelet,
+  examStuDetail
 } from '../services/searchService'
 
 @Controller('/search')
@@ -61,5 +62,12 @@ export default class SearchPage {
   async findStudentInfo (ctx, next) {
     // 教师获取学生的详情
     ctx.body = await getStuInfo(ctx)
+  }
+
+  @Get('/techerExamDetail')
+  @Auth(2)
+  async getExamStuDetail (ctx, next) {
+    // 获取老师对应试卷的详细信息（学成成绩列表）
+    ctx.body = await examStuDetail(ctx)
   }
 }
