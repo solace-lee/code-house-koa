@@ -8,6 +8,7 @@ const ParentApply = mongoose.model('ParentApply')
 const HistoryLog = mongoose.model('HistoryLog')
 
 export const getParentApply = async (ctx) => {
+  // 查询家长申请列表
   const openid = ctx.request.header.authorization
   let applyList = await ParentApply.find({
     teacher_openid: openid,
